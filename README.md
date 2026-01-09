@@ -9,7 +9,6 @@ Contenido principal:
 - `passing.csv`: datos de pases y estadísticas por jugador (limpio).
 - `reporte_mediocampo.csv`: reporte filtrado con métricas por jugador del mediocampo.
 - `data_load.py`, `clean_data.py`, `analyze_mediocampo.py`, `plot_pases.py`: scripts de ayuda y análisis.
-- `tests/`: tests básicos ejecutados por CI.
 - `LICENSE`: licencia MIT.
 
 Requisitos:
@@ -30,14 +29,9 @@ from data_load import load_data
 df, report = load_data('passing.csv', 'reporte_mediocampo.csv')
 ```
 
-Ejecutar tests localmente:
-```powershell
-pytest
-```
-
 Notas:
 - He unificado nombres de archivos y eliminado duplicados redundantes para facilitar el uso.
-- CI ejecuta `pytest` automáticamente en cada push/pull request.
+- CI está configurado para ejecutar pruebas si están presentes en el repositorio.
 
 Licencia:
 Este proyecto se publica bajo la licencia MIT. Consulta `LICENSE`.
