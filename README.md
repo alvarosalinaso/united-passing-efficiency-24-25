@@ -35,3 +35,8 @@ Notas:
 
 Licencia:
 Este proyecto se publica bajo la licencia MIT. Consulta `LICENSE`.
+
+📞 Contacto
+Autor: Álvaro Salinas Ortiz
+LinkedIn: https://www.linkedin.com/in/alvaro-salinas-ortiz/
+Email:  agrega esto al documento
