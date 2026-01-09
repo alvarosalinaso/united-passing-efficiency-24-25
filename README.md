@@ -65,3 +65,6 @@ Subir a GitHub:
 Notas:
 - He limpiado el formato de los CSV (eliminadas las marcas de bloque) para poder leerlos directamente con `pandas.read_csv`.
 - Si quieres que cree el repositorio en tu cuenta y haga el push, proporciona la URL del repo o un token con permisos (recomiendo realizar el push desde tu máquina para mayor seguridad).
+
+Licencia:
+Este proyecto se publica bajo la licencia MIT. Consulta el archivo `LICENSE` para más detalles.
