@@ -1,6 +1,4 @@
-"""Genera gráficos simples de pases y guarda imágenes.
-Requiere: matplotlib, seaborn (opcional)
-"""Genera gráficos simples de pases y guarda imágenes.
+﻿"""Genera gráficos simples de pases y guarda imágenes.
 Requiere: matplotlib, seaborn (opcional)
 """
 import pandas as pd
