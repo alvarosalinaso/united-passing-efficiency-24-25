@@ -1,3 +1,5 @@
+[![CI](https://github.com/alvarosalinaso/united-passing-efficiency-24-25/actions/workflows/ci.yml/badge.svg)](https://github.com/alvarosalinaso/united-passing-efficiency-24-25/actions/workflows/ci.yml)
+
 Proyecto: Análisis de pases — Manchester United 2024-2025
 
 Contenido:
