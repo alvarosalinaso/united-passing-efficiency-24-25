@@ -1,11 +1,13 @@
 """Genera gráficos simples de pases y guarda imágenes.
 Requiere: matplotlib, seaborn (opcional)
+"""Genera gráficos simples de pases y guarda imágenes.
+Requiere: matplotlib, seaborn (opcional)
 """
 import pandas as pd
 import matplotlib.pyplot as plt
 
 
-def plot_top_passers(passes_path='Passing_clean.csv', out_path='grafico_pases_united.png', top_n=10):
+def plot_top_passers(passes_path='passing.csv', out_path='grafico_pases_united.png', top_n=10):
     df = pd.read_csv(passes_path)
     if 'Cmp' in df.columns:
         top = df.sort_values('Cmp', ascending=False).head(top_n)
@@ -19,6 +21,7 @@ def plot_top_passers(passes_path='Passing_clean.csv', out_path='grafico_pases_un
         return out_path
     else:
         raise KeyError('La columna Cmp no existe en {}'.format(passes_path))
+
 
 if __name__ == '__main__':
     print('Generando gráfico...')
