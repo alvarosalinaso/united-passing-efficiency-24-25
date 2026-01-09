@@ -3,7 +3,7 @@ Uso: python data_load.py
 """
 import pandas as pd
 
-def load_data(passes_path='Passing_clean.csv', report_path='reporte_mediocampo_clean.csv'):
+def load_data(passes_path='passing.csv', report_path='reporte_mediocampo.csv'):
     df = pd.read_csv(passes_path)
     report = pd.read_csv(report_path)
     return df, report

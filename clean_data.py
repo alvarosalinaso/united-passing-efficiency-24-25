@@ -16,7 +16,7 @@ def clean_passes(df: pd.DataFrame) -> pd.DataFrame:
 
 if __name__ == '__main__':
     import sys
-    path = sys.argv[1] if len(sys.argv) > 1 else 'Passing_clean.csv'
+    path = sys.argv[1] if len(sys.argv) > 1 else 'passing.csv'
     df = pd.read_csv(path)
     df_clean = clean_passes(df)
     print('Limpieza completada:', df_clean.shape)
