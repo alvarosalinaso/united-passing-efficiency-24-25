@@ -59,9 +59,24 @@ def dump_passing():
             logs.append({"matchday": d, "player": x["player"], "pass_acc": max(70, min(98, x["pass_acc"] + n * 100)), "prog_passes": max(0, x["prog_passes"] + np.random.normal(0, 0.6)), "xT_gen": max(0, x["xT_gen"] + np.random.normal(0, 0.05))})
             
     df_t = pd.DataFrame(logs)
+
+    team_data = [{"team": "Manchester Utd", "poss": 52.1, "pass_acc": 84.5, "prog_passes": 42.1, "xT_gen": 1.48}]
+    pl_teams = [
+        ("Arsenal", 60.5, 88.2, 55.4, 2.1), ("Man City", 65.2, 90.1, 62.3, 2.45), ("Liverpool", 61.0, 86.5, 58.1, 2.2),
+        ("Aston Villa", 54.2, 85.0, 45.2, 1.6), ("Tottenham", 59.8, 86.8, 52.1, 1.9), ("Chelsea", 58.5, 87.1, 50.4, 1.85),
+        ("Newcastle", 51.0, 82.5, 41.2, 1.55), ("West Ham", 45.2, 79.8, 32.5, 1.1), ("Brighton", 58.1, 86.2, 49.8, 1.7),
+        ("Bournemouth", 48.5, 80.1, 38.4, 1.25), ("Fulham", 51.5, 83.0, 43.1, 1.3), ("Wolves", 47.2, 81.5, 36.5, 1.15),
+        ("Crystal Palace", 46.5, 80.8, 35.1, 1.2), ("Everton", 42.1, 76.5, 29.8, 0.95), ("Brentford", 45.8, 79.2, 33.4, 1.05),
+        ("N. Forest", 41.5, 75.8, 28.5, 0.9), ("Luton", 39.2, 72.1, 25.4, 0.75), ("Burnley", 44.5, 78.5, 31.2, 0.85),
+        ("Sheff Utd", 36.5, 71.2, 22.1, 0.65)
+    ]
+    for t in pl_teams: team_data.append({"team": t[0], "poss": t[1], "pass_acc": t[2], "prog_passes": t[3], "xT_gen": t[4]})
+    df_teams = pd.DataFrame(team_data)
+
     os.makedirs("data/raw", exist_ok=True)
     df.to_csv("data/raw/passing_players.csv", index=False)
     df_t.to_csv("data/raw/passing_timeline.csv", index=False)
+    df_teams.to_csv("data/raw/pl_teams.csv", index=False)
     print("Mocks in place.")
 
 if __name__ == "__main__": dump_passing()

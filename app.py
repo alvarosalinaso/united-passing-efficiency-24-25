@@ -1,6 +1,9 @@
 import streamlit as st
 from src.streamlit.dashboard_data import load_streamlit_data
-from src.streamlit.dashboard_plots import graficar_ranking, graficar_radar, graficar_heatmap_zonas, graficar_heatmap_xt, graficar_red_pases, graficar_evolucion
+from src.streamlit.dashboard_plots import (
+    graficar_ranking, graficar_radar, graficar_heatmap_zonas, 
+    graficar_heatmap_xt, graficar_red_pases, graficar_evolucion, graficar_scatter_pl
+)
 
 st.set_page_config(page_title="United Passing Data", page_icon="🏟️", layout="wide", initial_sidebar_state="expanded")
 
@@ -16,7 +19,7 @@ html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
 </style>
 """, unsafe_allow_html=True)
 
-df_all, df_t, k_dict = load_streamlit_data()
+df_all, df_t_all, df_teams, kpis = load_streamlit_data()
 
 with st.sidebar:
     st.markdown("<h2 style='color:#DA291C;text-align:center;'>United Passing Stats</h2><hr>", unsafe_allow_html=True)
@@ -52,7 +55,12 @@ c3.metric("xT/90", f"{df_work['xT_gen'].mean():.3f}")
 c4.metric("Índice Vert", f"{df_work['vert_idx'].mean():.2f}")
 c5.metric("Pérdidas/90", f"{df_work['losses'].mean():.1f}", delta_color="inverse")
 
-st.markdown("<div class='section-header'>1. Leaderboards</div>", unsafe_allow_html=True)
+st.markdown("<div class='section-header'>1. Contexto Macro: La Premier League</div>", unsafe_allow_html=True)
+st.plotly_chart(graficar_scatter_pl(df_teams), use_container_width=True)
+
+st.markdown("<div class='section-header'>2. Desempeño Ofensivo Individual (Leaderboard)</div>", unsafe_allow_html=True)
+with st.sidebar:
+    st.header("Filtros de Squad")
 ca, cb = st.columns([3, 2])
 with ca:
     r_df = df_work.sort_values(sel_var, ascending=(sel_var == "losses"))
@@ -72,10 +80,10 @@ h1, h2 = st.columns(2)
 with h1: st.plotly_chart(graficar_heatmap_zonas(p_row), use_container_width=True)
 with h2: st.plotly_chart(graficar_heatmap_xt(p_row), use_container_width=True)
 
-st.markdown("<div class='section-header'>3. Red de Flujo</div>", unsafe_allow_html=True)
+st.markdown("<div class='section-header'>4. Red de Flujo y Construcción</div>", unsafe_allow_html=True)
 st.plotly_chart(graficar_red_pases(df_all), use_container_width=True)
 
-st.markdown("<div class='section-header'>4. Tracking Estacional</div>", unsafe_allow_html=True)
+st.markdown("<div class='section-header'>5. Tracking Estacional</div>", unsafe_allow_html=True)
 tr_c1, tr_c2 = st.columns([1,1])
 with tr_c1: p_track = st.multiselect("Benchmark jugadores", df_work["player"].tolist(), default=df_work["player"].tolist()[:2])
 with tr_c2: m_track_lb = st.selectbox("Benchmark Métrica", ["Precisión", "Pases Prog", "xT generado"])

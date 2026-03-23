@@ -203,3 +203,38 @@ def graficar_evolucion(df_time, df_f, players_evo, metric_evo_col, metric_label)
     fig_evo.update_layout(**PLOTLY_THEME, title=f"{metric_label} — Media móvil 5 partidos", height=420, legend=dict(orientation="h", y=-0.15, x=0))
     fig_evo.update_xaxes(title="Jornada"); fig_evo.update_yaxes(title=metric_label)
     return fig_evo
+
+def graficar_scatter_pl(df_teams):
+    fig = go.Figure()
+    
+    # Rest of the league
+    df_others = df_teams[df_teams["team"] != "Manchester Utd"]
+    fig.add_trace(go.Scatter(
+        x=df_others["prog_passes"], y=df_others["xT_gen"],
+        mode="markers+text", marker=dict(color="#30363d", size=14, opacity=0.7),
+        text=df_others["team"], textposition="top center", textfont=dict(color="#8b949e", size=9),
+        hoverinfo="text", hovertext=df_others["team"] + "<br>Prog Passes: " + df_others["prog_passes"].round(1).astype(str) + "<br>xT: " + df_others["xT_gen"].round(2).astype(str),
+        name="Resto PL"
+    ))
+    
+    # Manchester United
+    df_mu = df_teams[df_teams["team"] == "Manchester Utd"]
+    fig.add_trace(go.Scatter(
+        x=df_mu["prog_passes"], y=df_mu["xT_gen"],
+        mode="markers+text", marker=dict(color=COLORS["primary"], size=22, line=dict(color="#fff", width=2)),
+        text=df_mu["team"], textposition="top center", textfont=dict(color="#e6edf3", size=12),
+        hoverinfo="text", hovertext="Manchester Utd<br>Prog Passes: " + df_mu["prog_passes"].round(1).astype(str) + "<br>xT: " + df_mu["xT_gen"].round(2).astype(str),
+        name="Manchester Utd"
+    ))
+    
+    avg_prog = df_teams["prog_passes"].mean()
+    avg_xt = df_teams["xT_gen"].mean()
+    fig.add_hline(y=avg_xt, line_dash="dash", line_color="#30363d", opacity=0.5)
+    fig.add_vline(x=avg_prog, line_dash="dash", line_color="#30363d", opacity=0.5)
+    
+    fig.update_layout(**PLOTLY_THEME, title="Rendimiento Colectivo: Progresión vs Peligro (xT) - Premier League", height=450, showlegend=False)
+    fig.update_xaxes(title="Pases Progresivos / 90'")
+    fig.update_yaxes(title="Expected Threat (xT) / 90'")
+    
+    fig.add_annotation(x=df_teams["prog_passes"].max(), y=df_teams["xT_gen"].max(), text="Volumen & Peligro Alto", showarrow=False, font=dict(color="#3fb950", size=10), xanchor="right", yanchor="bottom")
+    return fig
