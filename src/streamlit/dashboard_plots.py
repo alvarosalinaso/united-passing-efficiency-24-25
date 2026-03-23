@@ -37,17 +37,25 @@ def graficar_ranking(df_rank, sel_metric, sel_metric_label):
     fig_bar.update_layout(**PLOTLY_THEME, title=f"Jugadores por {sel_metric_label}", height=340, bargap=0.35)
     return fig_bar
 
-def graficar_radar(df_f, players_sel):
+def graficar_radar(df_f, players_sel, profile="Completo (Mixto)"):
     if not players_sel: players_sel = df_f["player"].tolist()[:1]
-    categories = ["Precisión", "Prog/90", "Verticalidad", "Pases clave", "xT", "xA"]
-    norm_cols  = ["pass_acc", "prog_passes", "vert_idx", "key_passes", "xT_gen", "xA"]
+    
+    if profile == "Creador (Pases, xT)":
+        categories = ["Precisión", "Prog/90", "Verticalidad", "Pases clave", "xT", "xA"]
+        norm_cols  = ["pass_acc", "prog_passes", "vert_idx", "key_passes", "xT_gen", "xA"]
+    elif profile == "Destructor (Duelos, Rec)":
+        categories = ["Duelos%", "Rec/90", "Int/90", "Precisión", "Prog/90", "Retención (Inv Pérdida)"]
+        norm_cols  = ["duels_won", "recoveries", "interceptions", "pass_acc", "prog_passes", "losses"]
+    else:
+        categories = ["Precisión", "Prog/90", "xT", "Duelos%", "Rec/90", "Retención (Inv Pérdida)"]
+        norm_cols  = ["pass_acc", "prog_passes", "xT_gen", "duels_won", "recoveries", "losses"]
     
     fig_radar = go.Figure()
     palette = [COLORS["primary"], COLORS["accent"], COLORS["good"], COLORS["secondary"], COLORS["warn"], COLORS["bad"]]
 
     for i, player in enumerate(players_sel[:4]):
         row = df_f[df_f["player"] == player].iloc[0]
-        vals = [round(row[col] / (df_f[col].max() or 1) * 100, 1) for col in norm_cols]
+        vals = [round(100 - (row[col] / (df_f[col].max() or 1) * 100), 1) if col == "losses" else round(row[col] / (df_f[col].max() or 1) * 100, 1) for col in norm_cols]
         vals += [vals[0]]
         
         hex_color = palette[i % len(palette)].lstrip('#')

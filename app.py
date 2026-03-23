@@ -29,8 +29,9 @@ with st.sidebar:
     st.markdown("---")
     opp_tier = st.radio("Dificultad de Partido", ["Resto PL", "Top 6"])
     
+    radar_profile = st.radio("Perfil de Radar", ["Completo (Mixto)", "Creador (Pases, xT)", "Destructor (Duelos, Rec)"])
     st.markdown("---")
-    m_map = {"xT Generado": "xT_gen", "Pases Prog": "prog_passes", "Precisión": "pass_acc", "Verticalidad": "vert_idx", "Pérdidas": "losses"}
+    m_map = {"xT Generado": "xT_gen", "Pases Prog": "prog_passes", "Precisión": "pass_acc", "Verticalidad": "vert_idx", "Pérdidas": "losses", "Duelos Ganados": "duels_won", "Recuperaciones": "recoveries", "Intercepciones": "interceptions"}
     target_stat = st.selectbox("Métrica Foco", list(m_map.keys()))
     sel_var = m_map[target_stat]
 
@@ -56,10 +57,10 @@ ca, cb = st.columns([3, 2])
 with ca:
     r_df = df_work.sort_values(sel_var, ascending=(sel_var == "losses"))
     st.plotly_chart(graficar_ranking(r_df, sel_var, target_stat), use_container_width=True)
-with cb: st.plotly_chart(graficar_radar(df_work, f_player), use_container_width=True)
+with cb: st.plotly_chart(graficar_radar(df_work, f_player, radar_profile), use_container_width=True)
 
 with st.expander("Tabla Raw"):
-    cols = {"player": "Jugador", "pos": "Pos", "apps": "PJ", "pass_acc": "Acc%", "prog_passes": "Prog/90", "vert_idx": "Vert", "xT_gen": "xT", "losses": "Pérdidas"}
+    cols = {"player": "Jugador", "pos": "Pos", "apps": "PJ", "pass_acc": "Acc%", "prog_passes": "Prog/90", "vert_idx": "Vert", "xT_gen": "xT", "losses": "Pérdidas", "duels_won": "Duelos%", "interceptions": "Int/90", "recoveries": "Rec/90"}
     disp = df_work[list(cols.keys())].rename(columns=cols).round(2)
     st.dataframe(disp.style.background_gradient(cmap='viridis', subset=disp.select_dtypes('number').columns).format(precision=2), use_container_width=True, hide_index=True)
 
