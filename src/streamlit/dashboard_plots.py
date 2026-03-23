@@ -33,8 +33,8 @@ def graficar_ranking(df_rank, sel_metric, sel_metric_label):
     fig_bar.update_layout(**PLOTLY_THEME, title=f"Jugadores por {sel_metric_label}", height=340, bargap=0.35)
     return fig_bar
 
-def graficar_radar(df_f, focus_player):
-    players_sel = df_f["player"].tolist() if focus_player == "Todos" else [focus_player]
+def graficar_radar(df_f, players_sel):
+    if not players_sel: players_sel = df_f["player"].tolist()[:1]
     categories = ["Precisión", "Prog/90", "Verticalidad", "Pases clave", "xT", "xA"]
     norm_cols  = ["pass_acc", "prog_passes", "vert_idx", "key_passes", "xT_gen", "xA"]
     

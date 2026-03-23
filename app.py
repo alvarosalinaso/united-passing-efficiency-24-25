@@ -23,7 +23,8 @@ with st.sidebar:
 
     pos_filter = st.selectbox("Posición", ["Todos"] + sorted(df_all["pos"].unique().tolist()))
     min_games = st.slider("Min Partidos", 0, 38, 10)
-    f_player = st.selectbox("Foco (Radar)", ["Todos"] + df_all["player"].unique().tolist())
+    default_radars = sorted(df_all["player"].unique().tolist())[:2]
+    f_player = st.multiselect("Comparativa Radar (Max 4)", sorted(df_all["player"].unique().tolist()), default=default_radars, max_selections=4)
     
     st.markdown("---")
     opp_tier = st.radio("Dificultad de Partido", ["Resto PL", "Top 6"])
