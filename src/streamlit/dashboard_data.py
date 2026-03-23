@@ -2,7 +2,7 @@ import pandas as pd
 import streamlit as st
 
 from pathlib import Path
-@st.cache_data
+@st.cache_data(ttl=3600)
 def load_streamlit_data():
     base = Path(__file__).parent.parent.parent / "data" / "raw"
     df = pd.read_csv(base / "passing_players.csv")
