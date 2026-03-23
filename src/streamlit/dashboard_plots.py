@@ -1,6 +1,10 @@
 import plotly.express as px
 import plotly.graph_objects as go
 import numpy as np
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+from mplsoccer import Pitch
 
 COLORS = {
     "primary":   "#DA291C", "secondary": "#FBE122", "accent":    "#58a6ff",
@@ -67,47 +71,38 @@ def graficar_radar(df_f, players_sel):
     return fig_radar
 
 def graficar_heatmap_zonas(player_row):
-    zones_y = ["Bloque Bajo", "Zona Construc.", "Zona Ataque", "Último Tercio"]
-    zones_x = ["Banda Izq.", "Semi-izq.", "Centro Izq.", "Centro Der.", "Semi-der.", "Banda Der."]
-
-    np.random.seed(int(hash(player_row["player"])) % 999)
-    base, vert = player_row["prog_passes"] * 3, player_row["vert_idx"]
-    heat = np.random.exponential(base, (4, 6))
-    heat[2:, 2:4] *= (1 + vert * 2)
-    heat[:1, :] *= 0.4
-    heat = np.clip(heat, 0, 35)
-
-    fig_hm = go.Figure(go.Heatmap(
-        z=heat, x=zones_x, y=zones_y,
-        colorscale=[[0, "#0d1117"], [0.25, "#1a3a5c"], [0.5, "#1f6feb"], [0.75, "#DA291C"], [1.0, "#FBE122"]],
-        showscale=True, colorbar=dict(title="Intens.", thickness=14, bgcolor="rgba(0,0,0,0)"),
-        hoverongaps=False
-    ))
-    # Lineas tácticas
-    fig_hm.add_shape(type="rect", x0=-0.5, x1=5.5, y0=-0.5, y1=3.5, line=dict(color="#30363d", width=1))
-    fig_hm.add_shape(type="line", x0=-0.5, x1=5.5, y0=0.5, y1=0.5, line=dict(color="#30363d", dash="dot", width=1))
-    fig_hm.add_shape(type="line", x0=-0.5, x1=5.5, y0=1.5, y1=1.5, line=dict(color="#30363d", dash="dot", width=1))
-    fig_hm.add_shape(type="line", x0=-0.5, x1=5.5, y0=2.5, y1=2.5, line=dict(color="#DA291C", dash="dash", width=1.5))
+    pitch = Pitch(pitch_type='statsbomb', pitch_color='#0d1117', line_color='#30363d')
+    fig, ax = pitch.draw(figsize=(6, 4))
+    fig.patch.set_facecolor('#0d1117')
     
-    fig_hm.update_layout(**PLOTLY_THEME, title=f"Pases progresivos — {player_row['player']}", height=400)
-    fig_hm.update_xaxes(side="top", gridcolor="rgba(0,0,0,0)"); fig_hm.update_yaxes(gridcolor="rgba(0,0,0,0)")
-    return fig_hm
+    np.random.seed(int(hash(player_row["player"])) % 999)
+    num_passes = int(player_row["prog_passes"] * 15) + 30
+    
+    # Bias distribution based on metrics
+    x = np.random.normal(50 + player_row["vert_idx"] * 25, 20, num_passes)
+    y = np.random.normal(40, 25, num_passes)
+    x = np.clip(x, 0, 120); y = np.clip(y, 0, 80)
+    
+    pitch.hexbin(x, y, ax=ax, edgecolors='#0d1117', gridsize=(8, 6), cmap='magma', alpha=0.8)
+    ax.set_title(f"Distribución de Pases — {player_row['player']}", color="#e6edf3", size=12, pad=5)
+    return fig
 
 def graficar_heatmap_xt(player_row):
-    zones_y = ["Bloque Bajo", "Zona Construc.", "Zona Ataque", "Último Tercio"]
-    zones_x = ["Banda Izq.", "Semi-izq.", "Centro Izq.", "Centro Der.", "Semi-der.", "Banda Der."]
-
-    xT_zones = np.random.exponential(player_row["xT_gen"] * 5, (4, 6))
-    xT_zones[3, 2:4] *= 2.5
-
-    fig_xt = go.Figure(go.Heatmap(
-        z=xT_zones, x=zones_x, y=zones_y,
-        colorscale=[[0, "#161b22"], [0.4, "#3fb950"], [0.8, "#FBE122"], [1, "#DA291C"]],
-        colorbar=dict(title="xT", thickness=14, bgcolor="rgba(0,0,0,0)"),
-    ))
-    fig_xt.update_layout(**PLOTLY_THEME, height=360, title=f"xT Generado — {player_row['player']}")
-    fig_xt.update_xaxes(side="top", gridcolor="rgba(0,0,0,0)"); fig_xt.update_yaxes(gridcolor="rgba(0,0,0,0)")
-    return fig_xt
+    pitch = Pitch(pitch_type='statsbomb', pitch_color='#0d1117', line_color='#30363d', half=True)
+    fig, ax = pitch.draw(figsize=(6, 4))
+    fig.patch.set_facecolor('#0d1117')
+    
+    np.random.seed(int(hash(player_row["player"])) % 999 + 1)
+    num_events = int(player_row["xT_gen"] * 120) + 5
+    
+    x = np.random.normal(95, 12, num_events)
+    y = np.random.normal(40, 25, num_events)
+    x = np.clip(x, 60, 120); y = np.clip(y, 0, 80)
+    
+    sizes = np.random.uniform(30, 180, num_events)
+    pitch.scatter(x, y, s=sizes, c='#DA291C', edgecolors='#0d1117', alpha=0.75, ax=ax)
+    ax.set_title(f"Nodos de xT — {player_row['player']}", color="#e6edf3", size=12, pad=5)
+    return fig
 
 def graficar_red_pases(df):
     positions_xy = {
