@@ -64,7 +64,11 @@ with st.sidebar:
     st.markdown("**🎛️ Filtros Globales**")
     sel_pos = st.selectbox("Posición Táctica", ["Todos"] + sorted(df["pos"].unique().tolist()))
     min_apps = st.slider("Partidos Mínimos Jugados", 0, 32, 15)
-    focus_player = st.selectbox("Jugador en Foco (Radares)", ["Todos"] + df["player"].tolist())
+    focus_player = st.selectbox("Jugador en Foco (Radares)", ["Todos"] + df["player"].unique().tolist())
+
+    st.markdown("---")
+    st.markdown("**⚔️ Contexto Opositor (Filtro Senior)**")
+    sel_context = st.radio("Nivel de Presión Rival", ["Resto PL", "Top 6 (Alta Presión)"], help="Audita qué jugador 'infla' sus estadísticas frente a equipos de baja tabal y quién sobrevive a la presión asfixiante de la élite de Inglaterra.")
 
     st.markdown("---")
     st.markdown("**📌 Métrica de Enfoque Principal**")
@@ -78,6 +82,11 @@ with st.sidebar:
 
 # ─────────────────────────────── FILTER ───────────────────────────────
 df_f = df.copy()
+
+# 1. Filtro Contextual (Crucial para el análisis Senior)
+target_tier = sel_context.replace(" (Alta Presión)", "")
+df_f = df_f[df_f["opponent_tier"] == target_tier]
+
 if sel_pos != "Todos":
     df_f = df_f[df_f["pos"] == sel_pos]
 df_f = df_f[df_f["apps"] >= min_apps]
@@ -126,7 +135,7 @@ st.markdown("<div class='section-header'>2. Radiografía Táctica Funcional 🔥
 st.markdown("<div class='section-text'>El fútbol no se juega en una hoja de Excel, sino en el césped. Aisla a un jugador para observar empíricamente en qué zonas específicas del campo ejecuta sus entregas de balón (izquierda) y en qué cuadrantes genera el mayor grado de amenaza xT contra el arco rival (derecha).</div>", unsafe_allow_html=True)
 
 col_sel, _ = st.columns([2, 5])
-hm_player = col_sel.selectbox("Filtrar jugador para los mapas de calor tácticos", df_f["player"].tolist(), key="hm_player")
+hm_player = col_sel.selectbox("Filtrar jugador para los mapas de calor tácticos", df_f["player"].unique().tolist(), key="hm_player")
 player_row = df_f[df_f["player"] == hm_player].iloc[0]
 
 h1, h2 = st.columns(2)
