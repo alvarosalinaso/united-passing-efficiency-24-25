@@ -1,4 +1,4 @@
-"""
+﻿"""
 ═══════════════════════════════════════════════════════════════════════════════
   United Passing Efficiency — Streamlit App
   Autor : Álvaro Salinas Ortiz  |  github.com/alvarosalinaso
@@ -366,9 +366,9 @@ with tab2:
         **PLOTLY_THEME,
         title=f"Distribución de pases progresivos — {hm_player}",
         height=400,
-        xaxis=dict(side="top", tickfont=dict(size=11, color="#8b949e"), gridcolor="rgba(0,0,0,0)"),
-        yaxis=dict(tickfont=dict(size=11, color="#8b949e"), gridcolor="rgba(0,0,0,0)"),
     )
+    fig_hm.update_xaxes(side="top", tickfont=dict(size=11, color="#8b949e"), gridcolor="rgba(0,0,0,0)")
+    fig_hm.update_yaxes(tickfont=dict(size=11, color="#8b949e"), gridcolor="rgba(0,0,0,0)")
     st.plotly_chart(fig_hm, use_container_width=True)
 
     st.markdown("#### ⚡ Expected Threat (xT) generado por zona")
@@ -385,9 +385,9 @@ with tab2:
         hovertemplate="Zona: %{x}<br>Sector: %{y}<br>xT: %{z:.3f}<extra></extra>",
     ))
     fig_xt.update_layout(**PLOTLY_THEME, height=360,
-                          title=f"Expected Threat generado — {hm_player}",
-                          xaxis=dict(side="top", tickfont=dict(size=11, color="#8b949e"), gridcolor="rgba(0,0,0,0)"),
-                          yaxis=dict(tickfont=dict(size=11, color="#8b949e"), gridcolor="rgba(0,0,0,0)"))
+                          title=f"Expected Threat generado — {hm_player}")
+    fig_xt.update_xaxes(side="top", tickfont=dict(size=11, color="#8b949e"), gridcolor="rgba(0,0,0,0)")
+    fig_xt.update_yaxes(tickfont=dict(size=11, color="#8b949e"), gridcolor="rgba(0,0,0,0)")
     st.plotly_chart(fig_xt, use_container_width=True)
 
 
@@ -458,11 +458,11 @@ with tab3:
     fig_net.update_layout(
         **PLOTLY_THEME,
         height=500,
-        xaxis=dict(range=[20, 100], showgrid=False, zeroline=False, showticklabels=False),
-        yaxis=dict(range=[0, 105], showgrid=False, zeroline=False, showticklabels=False),
         showlegend=False,
         title="Red de pases — Mediocampo Manchester United 2024-25",
     )
+    fig_net.update_xaxes(range=[20, 100], showgrid=False, zeroline=False, showticklabels=False)
+    fig_net.update_yaxes(range=[0, 105], showgrid=False, zeroline=False, showticklabels=False)
     fig_net.update_layout(shapes=field_shapes)
     st.plotly_chart(fig_net, use_container_width=True)
 
@@ -512,9 +512,9 @@ with tab4:
         title=f"{metric_evo_label} — Evolución por jornada (media móvil 5 partidos)",
         height=420,
         legend=dict(orientation="h", y=-0.15, x=0),
-        xaxis=dict(title="Jornada"),
-        yaxis=dict(title=metric_evo_label),
     )
+    fig_evo.update_xaxes(title="Jornada")
+    fig_evo.update_yaxes(title=metric_evo_label)
     st.plotly_chart(fig_evo, use_container_width=True)
 
 
@@ -527,3 +527,4 @@ st.markdown("""
   <a href='https://www.linkedin.com/in/alvaro-salinas-ortiz/' style='color:#58a6ff;'>LinkedIn</a>
 </div>
 """, unsafe_allow_html=True)
+
