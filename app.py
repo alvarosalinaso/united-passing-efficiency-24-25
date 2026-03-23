@@ -89,5 +89,5 @@ with tr_c1: p_track = st.multiselect("Benchmark jugadores", df_work["player"].to
 with tr_c2: m_track_lb = st.selectbox("Benchmark Métrica", ["Precisión", "Pases Prog", "xT generado"])
 
 m_track_col = {"Precisión": "pass_acc", "Pases Prog": "prog_passes", "xT generado": "xT_gen"}[m_track_lb]
-if p_track: st.plotly_chart(graficar_evolucion(df_t, df_work, p_track, m_track_col, m_track_lb), use_container_width=True)
+if p_track: st.plotly_chart(graficar_evolucion(df_t_all, df_work, p_track, m_track_col, m_track_lb), use_container_width=True)
 else: st.warning("Mete a alguien para trazar la curva.")
