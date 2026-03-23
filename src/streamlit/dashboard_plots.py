@@ -1,11 +1,6 @@
 import plotly.express as px
 import plotly.graph_objects as go
 import numpy as np
-import matplotlib
-matplotlib.use('Agg')
-import matplotlib.pyplot as plt
-from mplsoccer import Pitch
-
 COLORS = {
     "primary":   "#DA291C", "secondary": "#FBE122", "accent":    "#58a6ff",
     "good":      "#3fb950", "warn":      "#e3b341", "bad":       "#f78166",
@@ -78,45 +73,62 @@ def graficar_radar(df_f, players_sel, profile="Completo (Mixto)"):
     )
     return fig_radar
 
-def graficar_heatmap_zonas(player_row):
-    pitch = Pitch(pitch_type='statsbomb', pitch_color='#0d1117', line_color='#30363d')
-    fig, ax = pitch.draw(figsize=(6, 4))
-    fig.patch.set_facecolor('#0d1117')
+def _add_plotly_pitch(fig):
+    line_color = "#30363d"
+    # Outer bound
+    fig.add_shape(type="rect", x0=0, y0=0, x1=120, y1=80, line=dict(color=line_color, width=1.5), layer="below")
+    # Half-way line
+    fig.add_shape(type="line", x0=60, y0=0, x1=60, y1=80, line=dict(color=line_color, width=1.5), layer="below")
+    # Center circle
+    fig.add_shape(type="circle", x0=50, y0=30, x1=70, y1=50, line=dict(color=line_color, width=1.5), layer="below")
+    fig.add_shape(type="circle", x0=59.5, y0=39.5, x1=60.5, y1=40.5, fillcolor=line_color, line_color=line_color, layer="below")
+    # Left Penalty Area
+    fig.add_shape(type="rect", x0=0, y0=18, x1=18, y1=62, line=dict(color=line_color, width=1.5), layer="below")
+    fig.add_shape(type="rect", x0=0, y0=30, x1=6, y1=50, line=dict(color=line_color, width=1.5), layer="below")
+    fig.add_shape(type="circle", x0=11.5, y0=39.5, x1=12.5, y1=40.5, fillcolor=line_color, line_color=line_color, layer="below")
+    # Right Penalty Area
+    fig.add_shape(type="rect", x0=102, y0=18, x1=120, y1=62, line=dict(color=line_color, width=1.5), layer="below")
+    fig.add_shape(type="rect", x0=114, y0=30, x1=120, y1=50, line=dict(color=line_color, width=1.5), layer="below")
+    fig.add_shape(type="circle", x0=107.5, y0=39.5, x1=108.5, y1=40.5, fillcolor=line_color, line_color=line_color, layer="below")
     
+    fig.update_xaxes(range=[-5, 125], showgrid=False, zeroline=False, showticklabels=False)
+    fig.update_yaxes(range=[-5, 85], showgrid=False, zeroline=False, showticklabels=False, scaleanchor="x", scaleratio=1)
+
+def graficar_heatmap_zonas(player_row):
     np.random.seed(int(hash(player_row["player"])) % 999)
     num_passes = int(player_row["prog_passes"] * 15) + 30
-    
-    # Bias distribution based on metrics
     x = np.random.normal(50 + player_row["vert_idx"] * 25, 20, num_passes)
     y = np.random.normal(40, 25, num_passes)
     x = np.clip(x, 0, 120); y = np.clip(y, 0, 80)
     
-    pitch.hexbin(x, y, ax=ax, edgecolors='#0d1117', gridsize=(8, 6), cmap='magma', alpha=0.8)
-    ax.set_title(f"Distribución de Pases — {player_row['player']}", color="#e6edf3", size=12, pad=5)
+    fig = go.Figure(go.Histogram2d(
+        x=x, y=y, colorscale="Magma", nbinsx=15, nbinsy=10, 
+        zsmooth="best", showscale=False, opacity=0.85, hoverinfo="none"
+    ))
+    _add_plotly_pitch(fig)
+    fig.update_layout(**PLOTLY_THEME, title=f"Zonas de Operación — {player_row['player']}", height=320)
     return fig
 
 def graficar_heatmap_xt(player_row):
-    pitch = Pitch(pitch_type='statsbomb', pitch_color='#0d1117', line_color='#30363d', half=True)
-    fig, ax = pitch.draw(figsize=(6, 4))
-    fig.patch.set_facecolor('#0d1117')
-    
     np.random.seed(int(hash(player_row["player"])) % 999 + 1)
     num_events = int(player_row["xT_gen"] * 120) + 5
-    
     x = np.random.normal(95, 12, num_events)
     y = np.random.normal(40, 25, num_events)
     x = np.clip(x, 60, 120); y = np.clip(y, 0, 80)
+    sizes = np.random.uniform(10, 30, num_events)
     
-    sizes = np.random.uniform(30, 180, num_events)
-    pitch.scatter(x, y, s=sizes, c='#DA291C', edgecolors='#0d1117', alpha=0.75, ax=ax)
-    ax.set_title(f"Nodos de xT — {player_row['player']}", color="#e6edf3", size=12, pad=5)
+    fig = go.Figure(go.Scatter(
+        x=x, y=y, mode="markers", 
+        marker=dict(size=sizes, color=COLORS["primary"], opacity=0.75, line=dict(color="#0d1117", width=1)),
+        text=[f"Pos: ({int(xi)}, {int(yi)}) <br>Acción xT" for xi, yi in zip(x, y)], hoverinfo="text"
+    ))
+    
+    _add_plotly_pitch(fig)
+    fig.update_layout(**PLOTLY_THEME, title=f"Nodos de Generación xT — {player_row['player']}", height=320)
+    fig.update_xaxes(range=[60, 125]) # Half pitch view
     return fig
 
 def graficar_red_pases(df):
-    pitch = Pitch(pitch_type='statsbomb', pitch_color='#0d1117', line_color='#30363d')
-    fig, ax = pitch.draw(figsize=(10, 6))
-    fig.patch.set_facecolor('#0d1117')
-
     positions_xy = {
         "A. Onana": (10, 40),
         "D. Dalot": (35, 70), "M. de Ligt": (25, 55), "L. Martinez": (25, 25), "N. Mazraoui": (35, 10),
@@ -137,26 +149,38 @@ def graficar_red_pases(df):
         ("K. Mainoo", "M. Rashford", 45), ("M. Ugarte", "D. Dalot", 55)
     ]
 
+    fig = go.Figure()
     max_w = max(c[2] for c in combos)
 
+    # Draw Edges
     for p1, p2, w in combos:
         if p1 not in positions_xy or p2 not in positions_xy: continue
         x1, y1 = positions_xy[p1]; x2, y2 = positions_xy[p2]
-        pitch.lines(x1, y1, x2, y2, lw=max(1.5, int((w/max_w)*8)), color='#58a6ff', 
-                    alpha=0.3 + 0.6*(w/max_w), comet=True, transparent=True, zorder=2, ax=ax)
+        opaq = 0.2 + 0.6*(w/max_w)
+        wd = max(1.5, int((w/max_w)*8))
+        fig.add_trace(go.Scatter(
+            x=[x1, x2, None], y=[y1, y2, None], mode="lines",
+            line=dict(color=f"rgba(88,166,255,{opaq:.2f})", width=wd),
+            hoverinfo="skip", showlegend=False
+        ))
         
+    # Draw Nodes
     for p, (x, y) in positions_xy.items():
         row = df[df["player"] == p]
         xt_val = row["xT_gen"].values[0] if len(row) else 0
-        node_size = max(80, 200 + xt_val * 600)
-        
+        node_size = max(18, 25 + xt_val * 70)
         color = COLORS["primary"] if "Fernandes" in p or "Mainoo" in p else COLORS["accent"]
-        pitch.scatter(x, y, s=node_size, c=color, edgecolors='#0d1117', linewidth=2, zorder=3, ax=ax)
         
         name = p.split(".")[1].strip() if "." in p else p
-        ax.text(x, y - 5, name, color="#e6edf3", fontsize=9, ha='center', va='center', zorder=4)
+        fig.add_trace(go.Scatter(
+            x=[x], y=[y], mode="markers+text",
+            marker=dict(size=node_size, color=color, line=dict(color="#0d1117", width=2)),
+            text=[name], textposition="bottom center", textfont=dict(color="#e6edf3", size=11),
+            hoverinfo="text", hovertext=f"{p}<br>Pases Progresivos: {row['prog_passes'].values[0] if len(row) else 0}<br>xT: {xt_val}", name=p, showlegend=False
+        ))
 
-    ax.set_title("Red de Flujo y Construcción (4-2-3-1)", color="#e6edf3", size=14, pad=10)
+    _add_plotly_pitch(fig)
+    fig.update_layout(**PLOTLY_THEME, height=520, title="Red de Flujo y Pases 4-2-3-1 (Interactiva)")
     return fig
 
 def graficar_evolucion(df_time, df_f, players_evo, metric_evo_col, metric_label):

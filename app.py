@@ -69,11 +69,11 @@ p_sel = st.selectbox("Jugador para heatmap táctico", df_work["player"].unique()
 p_row = df_work[df_work["player"] == p_sel].iloc[0]
 
 h1, h2 = st.columns(2)
-with h1: st.pyplot(graficar_heatmap_zonas(p_row), use_container_width=True)
-with h2: st.pyplot(graficar_heatmap_xt(p_row), use_container_width=True)
+with h1: st.plotly_chart(graficar_heatmap_zonas(p_row), use_container_width=True)
+with h2: st.plotly_chart(graficar_heatmap_xt(p_row), use_container_width=True)
 
 st.markdown("<div class='section-header'>3. Red de Flujo</div>", unsafe_allow_html=True)
-st.pyplot(graficar_red_pases(df_all), use_container_width=True)
+st.plotly_chart(graficar_red_pases(df_all), use_container_width=True)
 
 st.markdown("<div class='section-header'>4. Tracking Estacional</div>", unsafe_allow_html=True)
 tr_c1, tr_c2 = st.columns([1,1])
