@@ -40,8 +40,8 @@ df_work = df_all[df_all["opponent_tier"] == cur_val].copy()
 if pos_filter != "Todos": df_work = df_work[df_work["pos"] == pos_filter]
 df_work = df_work[df_work["apps"] >= min_games]
 
-st.title("⚽ United: Foco en la Medular")
-st.markdown("Métricas transaccionales del mediocampo actual. Análisis duro sin fanatismos.")
+st.title("⚽ United: Analytics de Plantilla Completa")
+st.markdown("Métricas transaccionales de toda la plantilla de Old Trafford. Análisis duro sin fanatismos.")
 
 c1, c2, c3, c4, c5 = st.columns(5)
 c1.metric("Acc%", f"{df_work['pass_acc'].mean():.1f}%")
