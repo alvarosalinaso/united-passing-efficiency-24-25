@@ -22,7 +22,7 @@ with st.sidebar:
     st.markdown("<h2 style='color:#DA291C;text-align:center;'>United Passing Stats</h2><hr>", unsafe_allow_html=True)
 
     pos_filter = st.selectbox("Posición", ["Todos"] + sorted(df_all["pos"].unique().tolist()))
-    min_games = st.slider("Min Partidos", 0, 32, 15)
+    min_games = st.slider("Min Partidos", 0, 38, 10)
     f_player = st.selectbox("Foco (Radar)", ["Todos"] + df_all["player"].unique().tolist())
     
     st.markdown("---")
