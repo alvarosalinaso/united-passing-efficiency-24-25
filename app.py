@@ -309,12 +309,25 @@ with tab1:
         "xT_gen": "xT generado", "xA": "xA", "losses": "Pérdidas/90",
     }
     df_disp = df_f[list(display_cols.keys())].rename(columns=display_cols).round(2)
-    st.dataframe(
-        df_disp.style
-        .background_gradient(subset=["Precisión %", "Prog/90", "xT generado"], cmap="RdYlGn", vmin=70)
-        .background_gradient(subset=["Pérdidas/90"], cmap="RdYlGn_r"),
-        use_container_width=True, hide_index=True,
-    )
+   # --- CÓDIGO CORREGIDO PARA TABLA DE MÉTRICAS ---
+if not df_disp.empty:
+    # 1. Identificamos solo columnas numéricas para evitar errores de gradiente en texto
+    cols_numericas = df_disp.select_dtypes(include=['number']).columns.tolist()
+    
+    # 2. Aplicamos estilo solo si hay columnas numéricas y datos
+    try:
+        styled_df = df_disp.style.background_gradient(
+            cmap='viridis', 
+            subset=cols_numericas if cols_numericas else None
+        ).format(precision=2)
+        
+        st.subheader("Tabla de Métricas Completas")
+        st.dataframe(styled_df, use_container_width=True, hide_index=True)
+    except ValueError:
+        # Fallback: Si el gradiente falla por falta de varianza en los datos
+        st.dataframe(df_disp, use_container_width=True, hide_index=True)
+else:
+    st.error("No hay datos para mostrar con los filtros actuales. Ajusta la selección.")
 
 
 # ══════════════════════ TAB 2: HEATMAP ══════════════════════
