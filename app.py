@@ -73,7 +73,7 @@ with h1: st.pyplot(graficar_heatmap_zonas(p_row), use_container_width=True)
 with h2: st.pyplot(graficar_heatmap_xt(p_row), use_container_width=True)
 
 st.markdown("<div class='section-header'>3. Red de Flujo</div>", unsafe_allow_html=True)
-st.plotly_chart(graficar_red_pases(df_all), use_container_width=True)
+st.pyplot(graficar_red_pases(df_all), use_container_width=True)
 
 st.markdown("<div class='section-header'>4. Tracking Estacional</div>", unsafe_allow_html=True)
 tr_c1, tr_c2 = st.columns([1,1])

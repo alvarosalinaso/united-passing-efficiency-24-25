@@ -113,47 +113,51 @@ def graficar_heatmap_xt(player_row):
     return fig
 
 def graficar_red_pases(df):
+    pitch = Pitch(pitch_type='statsbomb', pitch_color='#0d1117', line_color='#30363d')
+    fig, ax = pitch.draw(figsize=(10, 6))
+    fig.patch.set_facecolor('#0d1117')
+
     positions_xy = {
-        "B. Fernandes": (60, 80), "C. Eriksen": (50, 58), "K. Mainoo": (70, 62),
-        "T. Højlund": (55, 45),  "M. Mount": (65, 72),  "Casemiro": (55, 35),
+        "A. Onana": (10, 40),
+        "D. Dalot": (35, 70), "M. de Ligt": (25, 55), "L. Martinez": (25, 25), "N. Mazraoui": (35, 10),
+        "M. Ugarte": (50, 50), "K. Mainoo": (55, 30),
+        "A. Garnacho": (75, 75), "B. Fernandes": (70, 40), "M. Rashford": (75, 5),
+        "T. Højlund": (95, 40)
     }
+
     combos = [
-        ("B. Fernandes", "C. Eriksen",   85), ("B. Fernandes", "K. Mainoo", 62),
-        ("C. Eriksen",   "T. Højlund",   70), ("K. Mainoo", "B. Fernandes", 55),
-        ("T. Højlund",   "Casemiro",     90), ("M. Mount",     "B. Fernandes", 48),
-        ("C. Eriksen",   "M. Mount",     40), ("Casemiro",     "C. Eriksen",   65),
-        ("K. Mainoo",    "T. Højlund",   38),
+        ("A. Onana", "L. Martinez", 60), ("A. Onana", "M. de Ligt", 45),
+        ("L. Martinez", "N. Mazraoui", 55), ("M. de Ligt", "D. Dalot", 65),
+        ("L. Martinez", "K. Mainoo", 70), ("M. de Ligt", "M. Ugarte", 50),
+        ("N. Mazraoui", "M. Rashford", 60), ("D. Dalot", "A. Garnacho", 50),
+        ("K. Mainoo", "B. Fernandes", 85), ("M. Ugarte", "K. Mainoo", 75),
+        ("M. Ugarte", "B. Fernandes", 60), ("B. Fernandes", "A. Garnacho", 65),
+        ("B. Fernandes", "M. Rashford", 70), ("B. Fernandes", "T. Højlund", 55),
+        ("A. Garnacho", "T. Højlund", 35), ("M. Rashford", "T. Højlund", 40),
+        ("K. Mainoo", "M. Rashford", 45), ("M. Ugarte", "D. Dalot", 55)
     ]
 
-    fig_net = go.Figure()
     max_w = max(c[2] for c in combos)
 
     for p1, p2, w in combos:
         if p1 not in positions_xy or p2 not in positions_xy: continue
         x1, y1 = positions_xy[p1]; x2, y2 = positions_xy[p2]
-        fig_net.add_trace(go.Scatter(x=[x1, x2, None], y=[y1, y2, None], mode="lines",
-                                     line=dict(color=f"rgba(88,166,255,{0.2 + 0.7 * (w/max_w):.2f})", width=max(1, int(w/15))),
-                                     hoverinfo="skip", showlegend=False))
+        pitch.lines(x1, y1, x2, y2, lw=max(1.5, int((w/max_w)*8)), color='#58a6ff', 
+                    alpha=0.3 + 0.6*(w/max_w), comet=True, transparent=True, zorder=2, ax=ax)
         
-    node_colors = [COLORS["primary"], COLORS["accent"], COLORS["good"], COLORS["warn"], COLORS["bad"], "#d2a8ff"]
-    for i, (player, (x, y)) in enumerate(positions_xy.items()):
-        row = df[df["player"] == player]
+    for p, (x, y) in positions_xy.items():
+        row = df[df["player"] == p]
         xt_val = row["xT_gen"].values[0] if len(row) else 0
-        fig_net.add_trace(go.Scatter(x=[x], y=[y], mode="markers+text",
-                                     marker=dict(size=20 + xt_val * 60, color=node_colors[i % len(node_colors)], line=dict(color="#0d1117", width=2)),
-                                     text=[player.split(".")[1].strip() if "." in player else player], textposition="bottom center",
-                                     textfont=dict(color="#e6edf3", size=10), name=player))
+        node_size = max(80, 200 + xt_val * 600)
+        
+        color = COLORS["primary"] if "Fernandes" in p or "Mainoo" in p else COLORS["accent"]
+        pitch.scatter(x, y, s=node_size, c=color, edgecolors='#0d1117', linewidth=2, zorder=3, ax=ax)
+        
+        name = p.split(".")[1].strip() if "." in p else p
+        ax.text(x, y - 5, name, color="#e6edf3", fontsize=9, ha='center', va='center', zorder=4)
 
-    field_shapes = [
-        dict(type="rect", x0=25, x1=95, y0=5, y1=100, line=dict(color="#30363d", width=1.5), fillcolor="rgba(22,27,34,0.0)"),
-        dict(type="line", x0=25, x1=95, y0=52, y1=52, line=dict(color="#30363d", dash="dash", width=1)),
-        dict(type="rect", x0=42, x1=78, y0=5, y1=20, line=dict(color="#30363d", width=1)),
-        dict(type="rect", x0=42, x1=78, y0=84, y1=100, line=dict(color="#30363d", width=1)),
-    ]
-    fig_net.update_layout(**PLOTLY_THEME, height=500, showlegend=False, title="Red de pases — Mediocampo Manchester United", shapes=field_shapes)
-    fig_net.update_xaxes(range=[20, 100], showgrid=False, zeroline=False, showticklabels=False)
-    fig_net.update_yaxes(range=[0, 105], showgrid=False, zeroline=False, showticklabels=False)
-    return fig_net
+    ax.set_title("Red de Flujo y Construcción (4-2-3-1)", color="#e6edf3", size=14, pad=10)
+    return fig
 
 def graficar_evolucion(df_time, df_f, players_evo, metric_evo_col, metric_label):
     df_evo = df_time[df_time["player"].isin(players_evo)]
