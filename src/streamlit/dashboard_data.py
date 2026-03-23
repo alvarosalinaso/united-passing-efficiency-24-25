@@ -1,10 +1,12 @@
 import pandas as pd
 import streamlit as st
 
+from pathlib import Path
 @st.cache_data
 def load_streamlit_data():
-    df = pd.read_csv("data/raw/passing_players.csv")
-    t_df = pd.read_csv("data/raw/passing_timeline.csv")
+    base = Path(__file__).parent.parent.parent / "data" / "raw"
+    df = pd.read_csv(base / "passing_players.csv")
+    t_df = pd.read_csv(base / "passing_timeline.csv")
     kpis = {
         "avg_acc": df["pass_acc"].mean(),
         "avg_prog": df["prog_passes"].mean(),
