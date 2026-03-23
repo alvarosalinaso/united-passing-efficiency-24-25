@@ -2,6 +2,8 @@
 
 # Manchester United 24/25: Inteligencia de Pases
 
+🚀 **[Ver Panel Interactivo en Vivo](https://united-passing-efficiency-24-25-csjdeu5gajataagkqbydyu.streamlit.app)**
+
 Métricas estadísticas del mediocampo de Old Trafford para esta temporada. Aquí medimos quién rompe líneas de presión (Peligro Esperado, pases progresivos) y quién juega a lo seguro inflando su precisión porcentual mediante pases laterales o defensivos.
 
 ## Funcionalidades Principales
