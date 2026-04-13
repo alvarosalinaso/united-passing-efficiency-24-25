@@ -4,24 +4,32 @@
 
 🚀 **[Ver Panel Interactivo en Vivo](https://united-passing-efficiency-24-25-csjdeu5gajataagkqbydyu.streamlit.app)**
 
-Métricas estadísticas del mediocampo de Old Trafford para esta temporada. Aquí medimos quién rompe líneas de presión (Peligro Esperado, pases progresivos) y quién juega a lo seguro inflando su precisión porcentual mediante pases laterales o defensivos.
+Dashboard estadístico para deconstruir la influencia de la sala de máquinas de Old Trafford. Este proyecto evalúa directamente la creación de Peligro Esperado en el mediocampo, identificando quién asume riesgos tácticos rompiendo líneas y quién preserva una falsa alta efectividad recurriendo a pases perimetrales.
 
-## Funcionalidades Principales
-- **Integración Continua Saneada**: Refactorización profunda de todas las funciones para trabajar con enfoques rápidos y concisos. Las pruebas unitarias actúan como red de seguridad y validación automática del repositorio en la nube.
-- **Resolución Binaria**: La aplicación central y sus gráficos acceden a la información sin errores en el manejo transversal de rutas de archivos de lectura absoluta.
-- **Filtros Dinámicos**: Posibilidad de ver la desviación táctica y el sesgo de la información dependiendo de si se enfrenta un equipo de alta presión o un rival de corte inferior.
+---
 
-## Archivos Clave
-- `passing.csv` / `reporte_mediocampo.csv`: Datos tácticos procesados y filtrados.
-- `app.py`: La interfaz de usuario reactiva que consume las métricas y dibuja los tableros de posiciones, mapas de calor e índices de verticalidad en tiempo real.
+## Funciones Principales y Diseño
 
-## Configuración Inicial
+- **Filtros Tácticos Activos:** Posibilidad de testear el rendimiento bajo stress. Te permite alterar el resultado visual dependiendo de si el equipo está confrontando líneas altas de presión o si está en un entorno táctico pasivo.
+- **Precisión bajo CI:** Diseño purgado con metodologías de CI completas y Unit Testing modularizado.
+- **Rutas a Prueba de Fallos:** Implementaciones OSO que aíslan el proyecto de quiebres dependientes de jerarquías de directorios externas.
 
-```powershell
+---
+
+## Módulos y Datasets
+
+- `passing.csv` / `reporte_mediocampo.csv`: Datos depurados por el backend con los cálculos de verticalidad.
+- `app.py`: Punto de entrada interactivo para Streamlit. Traduce las tablas en mapas de posicionamiento y correlaciones.
+
+---
+
+## Ejecución Base
+
+```bash
 python -m venv .venv
 .\.venv\Scripts\activate
 pip install -r requirements.txt
 streamlit run app.py
 ```
 
-> Álvaro Salinas Ortiz | alvarosalinasortiz@gmail.com | [LinkedIn](https://www.linkedin.com/in/alvaro-salinas-ortiz)
+> **Álvaro Salinas Ortiz** | Análisis de Datos y Estrategia Numérica | [LinkedIn](https://www.linkedin.com/in/alvaro-salinas-ortiz)
