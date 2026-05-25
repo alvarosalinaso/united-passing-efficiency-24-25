@@ -203,9 +203,28 @@ out_deg    = {p["player"]: sum(w for s,t,w in passes_f if s==p["player"]) for p 
 in_deg     = {p["player"]: sum(w for s,t,w in passes_f if t==p["player"]) for p in SQUAD}
 top_broker = max(bet, key=bet.get) if bet else "N/A"
 
-st.markdown("# 🕸️ United Passing Network")
-st.caption("Complex Network Analysis · Datos sintéticos con métricas basadas en rendimiento real 2024-25")
+st.markdown("""
+<div style="display:flex;align-items:center;gap:1.2rem;margin-bottom:.3rem;">
+  <img src="https://upload.wikimedia.org/wikipedia/en/7/7a/Manchester_United_FC_crest.svg"
+       style="height:64px;width:64px;object-fit:contain;">
+  <div>
+    <div style="font-size:2rem;font-weight:800;color:#DA291C;letter-spacing:-1px;">Manchester United</div>
+    <div style="color:#9BA3B0;font-size:.9rem;">Passing Network · Complex Network Analysis · Temporada 2024-25</div>
+  </div>
+</div>
+""", unsafe_allow_html=True)
+st.caption("Datos sintéticos basados en métricas reales de rendimiento 2024-25 · Proyecto de Álvaro Salinas")
 st.divider()
+
+st.markdown("""
+<div class="desc-box" style="border-left-color:#DA291C;">
+<strong>🏟️ Sobre este análisis:</strong> El Manchester United es uno de los clubes más grandes del mundo, pero en la temporada 2024-25
+enfrenta desafíos en la construcción del juego desde el mediocampo. Este dashboard analiza <strong>cómo circula el balón</strong>,
+<strong>quiénes son los jugadores más importantes</strong> en la red de pases y <strong>cómo se compara el equipo</strong>
+frente al resto de la Premier League. Usamos teoría de redes (Complex Network Analysis) para revelar patrones tácticos
+que los números tradicionales no muestran.
+</div>
+""", unsafe_allow_html=True)
 
 c1,c2,c3,c4 = st.columns(4)
 kpi(c1, sum(w for _,_,w in passes_net), "Pases totales en muestra")
