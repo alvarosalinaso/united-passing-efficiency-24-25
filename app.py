@@ -7,7 +7,7 @@ import pandas as pd
 import numpy as np
 import plotly.express as px
 import plotly.graph_objects as go
-from plotly.subplots import make_subplots
+
 
 st.set_page_config(
     page_title="United Passing Network",
@@ -403,19 +403,17 @@ elif vista == "🔄 Resto PL vs Top 6":
                      "xT total":round(sum(v["xT"] for v in STATS.values())*(1.0 if t=="Resto PL" else .78),2)})
     df_r = pd.DataFrame(rows)
 
-    fig = make_subplots(rows=1, cols=3,
-        subplot_titles=["Pases totales","Precisión media %","xT total"])
-    C_BAR = ["#DA291C","#F59E0B"]
-    for i,col in enumerate(["Pases totales","Precisión media %","xT total"]):
-        fig.add_trace(go.Bar(x=df_r["Rival"],y=df_r[col],
-            marker_color=C_BAR,showlegend=False,
-            text=[f"{v:.1f}" for v in df_r[col]],textposition="outside",
-            textfont=dict(color="#F0F2F6")),row=1,col=i+1)
-    fig.update_layout(title="Rendimiento de pases: Resto PL vs Top 6",
-                      **PT_L, margin=dict(t=60,b=40,l=10,r=10),height=380)
-    fig.update_xaxes(gridcolor="#2A2D35")
-    fig.update_yaxes(gridcolor="#2A2D35")
-    st.plotly_chart(fig, use_container_width=True)
+    ca, cb, cc = st.columns(3)
+    for col_place, met in zip([ca, cb, cc], ["Pases totales", "Precisión media %", "xT total"]):
+        with col_place:
+            fig = go.Figure(go.Bar(x=df_r["Rival"], y=df_r[met],
+                marker_color=["#DA291C", "#F59E0B"],
+                text=[f"{v:.1f}" for v in df_r[met]], textposition="outside",
+                textfont=dict(color="#F0F2F6", size=13)))
+            fig.update_layout(title=met, **PT_L, height=300, margin=dict(t=40, b=20, l=10, r=10))
+            fig.update_xaxes(gridcolor="#2A2D35")
+            fig.update_yaxes(gridcolor="#2A2D35")
+            st.plotly_chart(fig, use_container_width=True)
 
     st.warning(
         f"Contra el **Top 6**, United reduce su precisión de pase ~4pp y su xT generado cae un **22%**. "
