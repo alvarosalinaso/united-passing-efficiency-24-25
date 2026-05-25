@@ -149,13 +149,13 @@ def kpi(col, val, label, delta="", cls="neu"):
         f"</div>", unsafe_allow_html=True)
 
 with st.sidebar:
-    st.markdown("## 🕸️ Passing Network")
+    st.markdown("## 📊 Análisis de Pases — Man Utd")
     st.markdown("---")
     vista = st.selectbox("**Sección**", [
-        "🗺️ Red táctica de pases",
-        "📐 Métricas individuales",
-        "⚖️ vs Premier League",
-        "🔄 Resto PL vs Top 6",
+        "🗺️ Red de Pases",
+        "📐 Comparativa Individual",
+        "⚖️ Benchmark vs Premier League",
+        "🔄 Rendimiento: Resto PL vs Top 6",
     ])
 
     tier  = "Resto PL"
@@ -164,14 +164,14 @@ with st.sidebar:
     ex = "xT"
     ey = "prog"
 
-    if vista == "🗺️ Red táctica de pases":
+    if vista == "🗺️ Red de Pases":
         tier = st.radio("Tipo de rival",
             ["Resto PL", "Top 6"],
             help="Resto PL = rivales de media/baja tabla. Top 6 = Arsenal, City, Liverpool, etc. Contra equipos fuertes el volumen de pases disminuye.")
         min_w = st.slider("Conexiones mínimas (filtrar ruido)", 1, 20, 5,
             help="Muestra solo conexiones con al menos este número de pases. Útil para limpiar el gráfico.")
 
-    elif vista == "📐 Métricas individuales":
+    elif vista == "📐 Comparativa Individual":
         pos_f = st.multiselect("Filtrar por posición",
             ["GK","RB","LB","CB","CDM","CM","CAM","RW","ST"],
             default=["CDM","CM","CAM","RW","ST"],
@@ -185,9 +185,9 @@ with st.sidebar:
     st.markdown("---")
     with st.expander("ℹ️ ¿Qué hace cada sección?"):
         st.markdown("""
-        **🗺️ Red táctica** — Mapa de conexiones de pase entre jugadores. El tamaño del círculo indica qué tan importante es cada jugador en la circulación (betweenness centrality).
-        **📐 Métricas** — Gráfico de burbujas para comparar el rendimiento de jugadores en dos métricas a la vez.
-        **⚖️ vs PL** — Ranking del Manchester United vs el resto de la Premier League.
+        **🗺️ Red de Pases** — Mapa de conexiones entre jugadores. El tamaño del círculo indica su importancia en la circulación del balón (betweenness centrality).
+        **📐 Comparativa Individual** — Gráfico de burbujas para comparar el rendimiento de jugadores en dos métricas simultáneamente.
+        **⚖️ Benchmark vs PL** — Ranking del Manchester United frente al resto de la Premier League en métricas clave.
         **🔄 Resto vs Top 6** — Compara el rendimiento del equipo contra rivales fuertes vs débiles.
         """)
 
@@ -233,13 +233,13 @@ kpi(c3, top_broker, "Broker táctico (betweenness)",
 kpi(c4, max(STATS,key=lambda x:STATS[x]["xT"]), "Mayor xT generado")
 st.markdown("<br>", unsafe_allow_html=True)
 
-if vista == "🗺️ Red táctica de pases":
-    st.markdown("<div class='sec-header'>¿Qué ves aquí?</div>", unsafe_allow_html=True)
+if vista == "🗺️ Red de Pases":
+    st.markdown("<div class='sec-header'>Visualización de la Red de Pases</div>", unsafe_allow_html=True)
     st.markdown("""
     <div class="desc-box">
-    <strong>Red de pases sobre el campo:</strong> Cada círculo es un jugador. <strong>Tamaño</strong> = betweenness centrality
-    (qué tan importante es en el flujo de pases). <strong>Color</strong> = nivel de centralidad.
-    <strong>Líneas</strong> = conexiones de pase; más gruesas = más volumen.
+    <strong>Interpretación:</strong> Cada <strong>círculo</strong> representa un jugador. Su <strong>tamaño</strong> indica
+    la betweenness centrality (qué tan crítico es en la circulación). A mayor tamaño, más rutas de pase pasan por él.
+    Las <strong>líneas</strong> conectan jugadores que se combinan frecuentemente; más gruesas = mayor volumen de pases.
     </div>
     """, unsafe_allow_html=True)
 
@@ -303,7 +303,7 @@ if vista == "🗺️ Red táctica de pases":
     )
     st.plotly_chart(fig, use_container_width=True)
 
-    st.markdown("<div class='sec-header'>Métricas de centralidad por jugador</div>", unsafe_allow_html=True)
+    st.markdown("<div class='sec-header'>Tabla de Centralidad — Jugadores</div>", unsafe_allow_html=True)
     tbl = pd.DataFrame([{
         "Jugador": p["player"], "Pos": p["pos"],
         "Betweenness": round(bet.get(p["player"],0),4),
@@ -314,12 +314,13 @@ if vista == "🗺️ Red táctica de pases":
     } for p in SQUAD]).sort_values("Betweenness",ascending=False).reset_index(drop=True)
     st.dataframe(tbl, use_container_width=True, hide_index=True)
 
-elif vista == "📐 Métricas individuales":
-    st.markdown("<div class='sec-header'>¿Qué ves aquí?</div>", unsafe_allow_html=True)
+elif vista == "📐 Comparativa Individual":
+    st.markdown("<div class='sec-header'>Comparativa de Rendimiento Individual</div>", unsafe_allow_html=True)
     st.markdown("""
     <div class="desc-box">
-    <strong>Scatter plot de rendimiento:</strong> Cada punto es un jugador. <strong>Ejes X/Y</strong> los elegís vos.
-    <strong>Tamaño</strong> del punto = precisión de pase. <strong>Color</strong> = posición.
+    <strong>Interpretación:</strong> Cada <strong>burbuja</strong> es un jugador. Los ejes X e Y los elegís para comparar
+    dos métricas. El <strong>tamaño</strong> de la burbuja representa su precisión de pase.
+    Las <strong>líneas punteadas</strong> marcan el promedio del equipo en cada métrica.
     </div>
     """, unsafe_allow_html=True)
 
@@ -347,12 +348,12 @@ elif vista == "📐 Métricas individuales":
         fig.update_layout(height=460, legend=dict(orientation="h", y=-0.2), **PT_L)
         st.plotly_chart(fig, use_container_width=True)
 
-elif vista == "⚖️ vs Premier League":
-    st.markdown("<div class='sec-header'>¿Qué ves aquí?</div>", unsafe_allow_html=True)
+elif vista == "⚖️ Benchmark vs Premier League":
+    st.markdown("<div class='sec-header'>Benchmarking — Manchester United vs Premier League</div>", unsafe_allow_html=True)
     st.markdown("""
     <div class="desc-box">
-    <strong>Benchmarking vs Premier League:</strong> Compara al Manchester United con el resto de la liga
-    en posesión, precisión de pase, pases progresivos y xT. United aparece destacado en rojo.
+    <strong>Interpretación:</strong> Ranking del Manchester United (en <strong>rojo</strong>) frente al resto de la
+    Premier League. Seleccioná la métrica a comparar: posesión, precisión de pase, pases progresivos o xT.
     </div>
     """, unsafe_allow_html=True)
 
@@ -380,11 +381,12 @@ elif vista == "⚖️ vs Premier League":
             f"xT: **{utd['xT']}** vs promedio **{avg_xT:.2f}**")
 
 elif vista == "🔄 Resto PL vs Top 6":
-    st.markdown("<div class='sec-header'>¿Qué ves aquí?</div>", unsafe_allow_html=True)
+    st.markdown("<div class='sec-header'>Rendimiento del Equipo: Resto PL vs Top 6</div>", unsafe_allow_html=True)
     st.markdown("""
     <div class="desc-box">
-    <strong>Rendimiento contra la élite:</strong> Cómo cambian los pases totales, precisión y xT cuando
-    el United enfrenta al Top 6 vs el resto de la liga.
+    <strong>Interpretación:</strong> Compara el rendimiento del Manchester United cuando enfrenta al <strong>Top 6</strong>
+    (Arsenal, City, Liverpool, Tottenham, Chelsea, Aston Villa) vs el <strong>resto de la liga</strong>.
+    Revela cómo bajan los pases totales, la precisión y el xT generado contra rivales de élite.
     </div>
     """, unsafe_allow_html=True)
 
