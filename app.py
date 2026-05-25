@@ -204,25 +204,24 @@ in_deg     = {p["player"]: sum(w for s,t,w in passes_f if t==p["player"]) for p 
 top_broker = max(bet, key=bet.get) if bet else "N/A"
 
 st.markdown("""
-<div style="display:flex;align-items:center;gap:1.2rem;margin-bottom:.3rem;">
+<div style="display:flex;align-items:center;gap:1.5rem;margin-bottom:.3rem;">
   <img src="https://upload.wikimedia.org/wikipedia/en/7/7a/Manchester_United_FC_crest.svg"
-       style="height:64px;width:64px;object-fit:contain;">
+       style="height:80px;width:80px;object-fit:contain;flex-shrink:0;">
   <div>
-    <div style="font-size:2rem;font-weight:800;color:#DA291C;letter-spacing:-1px;">Manchester United</div>
-    <div style="color:#9BA3B0;font-size:.9rem;">Passing Network · Complex Network Analysis · Temporada 2024-25</div>
+    <div style="font-size:2.2rem;font-weight:800;color:#DA291C;letter-spacing:-1px;line-height:1.1;">Manchester United</div>
+    <div style="color:#9BA3B0;font-size:1rem;margin-top:.2rem;">Red de Pases · Análisis de Redes Complejas · Temporada 2024-25</div>
   </div>
 </div>
 """, unsafe_allow_html=True)
-st.caption("Datos sintéticos basados en métricas reales de rendimiento 2024-25 · Proyecto de Álvaro Salinas")
+st.caption("Análisis táctico del Manchester United · Proyecto de Álvaro Salinas · Datos sintéticos basados en rendimiento real")
 st.divider()
 
 st.markdown("""
 <div class="desc-box" style="border-left-color:#DA291C;">
-<strong>🏟️ Sobre este análisis:</strong> El Manchester United es uno de los clubes más grandes del mundo, pero en la temporada 2024-25
-enfrenta desafíos en la construcción del juego desde el mediocampo. Este dashboard analiza <strong>cómo circula el balón</strong>,
-<strong>quiénes son los jugadores más importantes</strong> en la red de pases y <strong>cómo se compara el equipo</strong>
-frente al resto de la Premier League. Usamos teoría de redes (Complex Network Analysis) para revelar patrones tácticos
-que los números tradicionales no muestran.
+<strong>🏟️ ¿De qué trata esto?</strong> Este dashboard analiza cómo circula el balón en el <strong>Manchester United</strong>
+durante la temporada 2024-25 usando teoría de redes (Complex Network Analysis). Podés ver <strong>quién conecta con quién</strong>,
+<strong>qué jugadores son más importantes</strong> en la circulación y <strong>cómo rinde el equipo</strong> comparado con
+la Premier League. Los datos son sintéticos pero están basados en métricas reales de rendimiento.
 </div>
 """, unsafe_allow_html=True)
 
