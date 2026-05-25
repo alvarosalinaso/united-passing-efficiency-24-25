@@ -204,12 +204,14 @@ in_deg     = {p["player"]: sum(w for s,t,w in passes_f if t==p["player"]) for p 
 top_broker = max(bet, key=bet.get) if bet else "N/A"
 
 st.markdown("""
-<div style="display:flex;align-items:center;gap:1.5rem;margin-bottom:.3rem;">
-  <img src="https://upload.wikimedia.org/wikipedia/en/7/7a/Manchester_United_FC_crest.svg"
-       style="height:80px;width:80px;object-fit:contain;flex-shrink:0;">
+<div style="display:flex;align-items:center;gap:1rem;padding:.3rem 0;">
+  <div style="flex-shrink:0;width:70px;height:70px;display:flex;align-items:center;justify-content:center;">
+    <img src="https://upload.wikimedia.org/wikipedia/en/7/7a/Manchester_United_FC_crest.svg"
+         style="max-width:70px;max-height:70px;width:auto;height:auto;">
+  </div>
   <div>
-    <div style="font-size:2.2rem;font-weight:800;color:#DA291C;letter-spacing:-1px;line-height:1.1;">Manchester United</div>
-    <div style="color:#9BA3B0;font-size:1rem;margin-top:.2rem;">Red de Pases · Análisis de Redes Complejas · Temporada 2024-25</div>
+    <div style="font-size:1.8rem;font-weight:800;color:#DA291C;letter-spacing:-1px;line-height:1.15;">Manchester United</div>
+    <div style="color:#9BA3B0;font-size:.85rem;margin-top:.2rem;">Red de Pases · Análisis de Redes Complejas · 2024-25</div>
   </div>
 </div>
 """, unsafe_allow_html=True)
