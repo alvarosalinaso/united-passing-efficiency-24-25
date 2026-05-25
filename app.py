@@ -156,28 +156,38 @@ with st.sidebar:
         "⚖️ vs Premier League",
         "🔄 Resto PL vs Top 6",
     ])
-    tier    = st.radio("Tipo de rival", ["Resto PL","Top 6"],
-                        help="Filtra el volumen de pases según dificultad del rival")
-    min_w   = st.slider("Mínimo de pases (mostrar conexión)", 1, 20, 5,
-                         help="Oculta conexiones con menos de N pases")
 
-    if vista == "📐 Métricas individuales":
-        pos_f = st.multiselect("Posición", ["GK","RB","LB","CB","CDM","CM","CAM","RW","ST"],
-                                default=["CDM","CM","CAM","RW","ST"])
+    tier  = "Resto PL"
+    min_w = 5
+    pos_f = ["CDM","CM","CAM","RW","ST"]
+    ex = "xT"
+    ey = "prog"
+
+    if vista == "🗺️ Red táctica de pases":
+        tier = st.radio("Tipo de rival",
+            ["Resto PL", "Top 6"],
+            help="Resto PL = rivales de media/baja tabla. Top 6 = Arsenal, City, Liverpool, etc. Contra equipos fuertes el volumen de pases disminuye.")
+        min_w = st.slider("Conexiones mínimas (filtrar ruido)", 1, 20, 5,
+            help="Muestra solo conexiones con al menos este número de pases. Útil para limpiar el gráfico.")
+
+    elif vista == "📐 Métricas individuales":
+        pos_f = st.multiselect("Filtrar por posición",
+            ["GK","RB","LB","CB","CDM","CM","CAM","RW","ST"],
+            default=["CDM","CM","CAM","RW","ST"],
+            help="Seleccioná qué posiciones querés ver en el gráfico.")
+        st.markdown("**Ejes del gráfico**")
         ex = st.selectbox("Eje X", ["pass_acc","prog","xT","vert"],
-                           format_func=lambda x:{"pass_acc":"Precisión pase %","prog":"Pas. prog./90",
-                                                   "xT":"xT generado","vert":"Verticalidad"}[x])
+            format_func=lambda x:{"pass_acc":"Precisión de pase %","prog":"Pases progresivos/90","xT":"xT generado","vert":"Verticalidad (0-1)"}[x])
         ey = st.selectbox("Eje Y", ["xT","prog","pass_acc","vert"],
-                           format_func=lambda x:{"pass_acc":"Precisión pase %","prog":"Pas. prog./90",
-                                                   "xT":"xT generado","vert":"Verticalidad"}[x])
+            format_func=lambda x:{"pass_acc":"Precisión de pase %","prog":"Pases progresivos/90","xT":"xT generado","vert":"Verticalidad (0-1)"}[x])
 
-    with st.expander("ℹ️ ¿Cómo usar?"):
+    st.markdown("---")
+    with st.expander("ℹ️ ¿Qué hace cada sección?"):
         st.markdown("""
-        **🗺️ Red táctica** — Mapa de conexiones de pase.
-        Tamaño del nodo = betweenness centrality.
-        **📐 Métricas** — Scatter plot de rendimiento individual.
-        **⚖️ vs PL** — Compara al United con la liga.
-        **🔄 Resto vs Top 6** — Rendimiento contra rivales fuertes.
+        **🗺️ Red táctica** — Mapa de conexiones de pase entre jugadores. El tamaño del círculo indica qué tan importante es cada jugador en la circulación (betweenness centrality).
+        **📐 Métricas** — Gráfico de burbujas para comparar el rendimiento de jugadores en dos métricas a la vez.
+        **⚖️ vs PL** — Ranking del Manchester United vs el resto de la Premier League.
+        **🔄 Resto vs Top 6** — Compara el rendimiento del equipo contra rivales fuertes vs débiles.
         """)
 
     st.markdown("---")
@@ -185,19 +195,19 @@ with st.sidebar:
                 "<a href='https://github.com/alvarosalinaso' style='color:#4F8BF9;'>github.com/alvarosalinaso</a></p>",
                 unsafe_allow_html=True)
 
-passes    = adjust(tier)
-passes_f  = [(s,t,w) for s,t,w in passes if w >= min_w]
-bet       = betweenness_simple(passes_f, SQUAD)
-out_deg   = {p["player"]: sum(w for s,t,w in passes_f if s==p["player"]) for p in SQUAD}
-in_deg    = {p["player"]: sum(w for s,t,w in passes_f if t==p["player"]) for p in SQUAD}
-top_broker= max(bet, key=bet.get)
+passes_net = adjust(tier)
+passes_f   = [(s,t,w) for s,t,w in passes_net if w >= min_w]
+bet        = betweenness_simple(passes_f, SQUAD)
+out_deg    = {p["player"]: sum(w for s,t,w in passes_f if s==p["player"]) for p in SQUAD}
+in_deg     = {p["player"]: sum(w for s,t,w in passes_f if t==p["player"]) for p in SQUAD}
+top_broker = max(bet, key=bet.get) if bet else "N/A"
 
 st.markdown("# 🕸️ United Passing Network")
 st.caption("Complex Network Analysis · Datos sintéticos con métricas basadas en rendimiento real 2024-25")
 st.divider()
 
 c1,c2,c3,c4 = st.columns(4)
-kpi(c1, sum(w for _,_,w in passes), "Pases totales en muestra")
+kpi(c1, sum(w for _,_,w in passes_net), "Pases totales en muestra")
 kpi(c2, f"{np.mean([v['pass_acc'] for v in STATS.values()]):.1f}%", "Precisión pase promedio")
 kpi(c3, top_broker, "Broker táctico (betweenness)",
     "Jugador más crítico en el flujo", "neu")
