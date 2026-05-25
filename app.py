@@ -138,7 +138,6 @@ PT = dict(
     template="plotly_dark", paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(26,29,36,0.6)",
     font=dict(family="Inter, system-ui", color="#F0F2F6", size=12),
     margin=dict(t=44, b=30, l=10, r=10),
-    colorway=["#DA291C","#F59E0B","#4F8BF9","#3FB950","#A78BFA","#EC4899"],
 )
 
 def kpi(col, val, label, delta="", cls="neu"):
@@ -307,7 +306,8 @@ elif vista == "📐 Métricas individuales":
         lm  = {"pass_acc":"Precisión pase %","prog":"Pases progresivos/90","xT":"xT generado","vert":"Verticalidad (0–1)"}
         sizes = [max(STATS[p]["pass_acc"], 0) * 1.5 for p in dff["player"]]
         fig = px.scatter(dff, x=ex, y=ey, color="pos", text="player",
-                         size=sizes,
+                         size=sizes, size_max=18,
+                         color_discrete_sequence=["#DA291C","#F59E0B","#4F8BF9","#3FB950","#A78BFA","#EC4899"],
                          title=f"{lm.get(ex,ex)} vs {lm.get(ey,ey)}",
                          labels={ex:lm.get(ex,ex), ey:lm.get(ey,ey), "pos":"Posición"},
                          **PT)
