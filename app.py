@@ -134,10 +134,11 @@ def betweenness_simple(passes, players):
     total = max(sum(scores.values()), 1)
     return {k: v/total for k,v in scores.items()}
 
-PT = dict(
-    template="plotly_dark", paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(26,29,36,0.6)",
+PT = dict(template="plotly_dark")
+
+PT_L = dict(
+    paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(26,29,36,0.6)",
     font=dict(family="Inter, system-ui", color="#F0F2F6", size=12),
-    margin=dict(t=44, b=30, l=10, r=10),
 )
 
 def kpi(col, val, label, delta="", cls="neu"):
@@ -325,7 +326,7 @@ elif vista == "📐 Métricas individuales":
         fig.add_hline(y=dff[ey].mean(), line_dash="dot", line_color="#9BA3B0",
                       annotation_text="Promedio", annotation_font_size=9)
         fig.add_vline(x=dff[ex].mean(), line_dash="dot", line_color="#9BA3B0")
-        fig.update_layout(height=460, legend=dict(orientation="h", y=-0.2))
+        fig.update_layout(height=460, legend=dict(orientation="h", y=-0.2), **PT_L)
         st.plotly_chart(fig, use_container_width=True)
 
 elif vista == "⚖️ vs Premier League":
@@ -348,7 +349,7 @@ elif vista == "⚖️ vs Premier League":
         text=[f"{v:.1f}" for v in df_s[metrica_pl]], textposition="outside", textfont_size=11,
     ))
     lm2={"pass_acc":"Precisión pase %","prog":"Pases prog./partido","xT":"xT/partido","poss":"Posesión %"}
-    fig.update_layout(title=f"Premier League — {lm2[metrica_pl]}", **PT, height=420)
+    fig.update_layout(title=f"Premier League — {lm2[metrica_pl]}", **PT_L, height=420)
     fig.update_xaxes(gridcolor="#2A2D35")
     fig.update_yaxes(gridcolor="#2A2D35")
     st.plotly_chart(fig, use_container_width=True)
@@ -389,7 +390,7 @@ elif vista == "🔄 Resto PL vs Top 6":
             text=[f"{v:.1f}" for v in df_r[col]],textposition="outside",
             textfont=dict(color="#F0F2F6")),row=1,col=i+1)
     fig.update_layout(title="Rendimiento de pases: Resto PL vs Top 6",
-                      **PT, margin=dict(t=60,b=40,l=10,r=10),height=380)
+                      **PT_L, margin=dict(t=60,b=40,l=10,r=10),height=380)
     fig.update_xaxes(gridcolor="#2A2D35")
     fig.update_yaxes(gridcolor="#2A2D35")
     st.plotly_chart(fig, use_container_width=True)
