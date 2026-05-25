@@ -382,7 +382,7 @@ elif vista == "⚖️ Benchmark vs Premier League":
     st.info(f"Man United — Precisión: **{utd['pass_acc']}%** vs promedio PL **{avg_acc:.1f}%** | "
             f"xT: **{utd['xT']}** vs promedio **{avg_xT:.2f}**")
 
-elif vista == "🔄 Resto PL vs Top 6":
+elif vista == "🔄 Rendimiento: Resto PL vs Top 6":
     st.markdown("<div class='sec-header'>Rendimiento del Equipo: Resto PL vs Top 6</div>", unsafe_allow_html=True)
     st.markdown("""
     <div class="desc-box">
@@ -415,10 +415,10 @@ elif vista == "🔄 Resto PL vs Top 6":
             fig.update_yaxes(gridcolor="#2A2D35")
             st.plotly_chart(fig, use_container_width=True)
 
+    broker_kw = f"**{top_broker}** (Betweenness: {bet.get(top_broker,0):.3f})" if top_broker != "N/A" else "*(no data)*"
     st.warning(
         f"Contra el **Top 6**, United reduce su precisión de pase ~4pp y su xT generado cae un **22%**. "
-        f"**{top_broker}** es el jugador cuya neutralización más interrumpe el flujo ofensivo "
-        f"(Betweenness: {bet[top_broker]:.3f})."
+        f"{broker_kw} es el jugador cuya neutralización más interrumpe el flujo ofensivo."
     )
 
 st.markdown("---")
