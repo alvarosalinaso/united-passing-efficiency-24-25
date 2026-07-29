@@ -1,42 +1,56 @@
+# Passing Efficiency — Manchester United 2024-25
+
 [![CI](https://github.com/alvarosalinaso/united-passing-efficiency-24-25/actions/workflows/ci.yml/badge.svg)](https://github.com/alvarosalinaso/united-passing-efficiency-24-25/actions/workflows/ci.yml)
+[![Python](https://img.shields.io/badge/Python-3.8%2B-blue)](https://python.org)
+[![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?logo=streamlit)](https://streamlit.io)
+[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
-Proyecto: Análisis de pases — Manchester United 2024-2025
+Dashboard táctico que analiza la eficiencia de pases del mediocampo del Manchester United (temporada 2024-2025). Incluye ranking de jugadores, mapas de calor por zona del campo, redes de pases basadas en grafos y evolución temporal de métricas clave.
 
-Descripción:
-Repositorio con datos y scripts para analizar la eficiencia de pases del Manchester United (temporada 2024-2025). Contiene un CSV con estadísticas por jugador, un reporte filtrado para mediocampistas y scripts para limpieza, análisis y visualización.
+## Dashboard en Vivo
 
-Contenido principal:
-- `passing.csv`: datos de pases y estadísticas por jugador (limpio).
-- `reporte_mediocampo.csv`: reporte filtrado con métricas por jugador del mediocampo.
-- `data_load.py`, `clean_data.py`, `analyze_mediocampo.py`, `plot_pases.py`: scripts de ayuda y análisis.
-- `LICENSE`: licencia MIT.
+👉 **[united-passing-efficiency-24-25.streamlit.app](https://united-passing-efficiency-24-25.streamlit.app)**
 
-Requisitos:
-- Python 3.8+
-- Instalar dependencias listadas en `requirements.txt`.
+## Stack
 
-Instalación rápida:
-```powershell
-python -m venv .venv
-.\.venv\Scripts\activate
+| Capa | Tecnología |
+|------|-----------|
+| **Lenguaje** | Python 3.8+ |
+| **Data** | Pandas, NumPy |
+| **Visualización** | Streamlit, Plotly, Matplotlib |
+| **Análisis** | SciPy (métricas de centralidad en grafos de pases) |
+| **Testing** | Pytest |
+| **CI/CD** | GitHub Actions |
+| **Licencia** | MIT |
+
+## Estructura
+
+```
+united-passing-efficiency-24-25/
+├── src/united_passing/     # Paquete principal
+│   ├── data.py             # Carga y validación
+│   ├── analysis.py         # Métricas tácticas
+│   └── plot.py             # Visualizaciones
+├── tests/                  # Tests unitarios
+├── .github/workflows/      # CI pipeline
+├── app.py                  # Dashboard Streamlit
+├── passing.csv             # Datos de pases
+├── reporte_mediocampo.csv  # Reporte filtrado mediocampo
+├── pyproject.toml          # Configuración
+└── requirements.txt        # Dependencias
+```
+
+## Inicio Rápido
+
+```bash
 pip install -r requirements.txt
+streamlit run app.py
 ```
 
-Uso básico:
-```python
-import pandas as pd
-from data_load import load_data
-df, report = load_data('passing.csv', 'reporte_mediocampo.csv')
+```bash
+pytest                      # Tests
 ```
 
-Notas:
-- He unificado nombres de archivos y eliminado duplicados redundantes para facilitar el uso.
-- CI está configurado para ejecutar pruebas si están presentes en el repositorio.
+## Contacto
 
-Licencia:
-Este proyecto se publica bajo la licencia MIT. Consulta `LICENSE`.
-
-📞 Contacto
-- **Autor**: Álvaro Salinas Ortiz
-- **LinkedIn**: https://www.linkedin.com/in/alvaro-salinas-ortiz/
-- **Email**: 
+**Álvaro Salinas Ortiz** — [LinkedIn](https://linkedin.com/in/alvaro-salinas-ortiz) · 

@@ -4,3 +4,8 @@ __pycache__/
 .DS_Store
 .env
 *.xlsx
+
+# Python__pycache__/
+*.pyc
+# Streamlit.streamlit/
+
