@@ -1,24 +1,27 @@
 """Tests para el módulo de datos de pases."""
-import pytest
-import pandas as pd
-from unittest.mock import patch
-from united_passing.data import clean_passes, build_midfield_report
-from united_passing.analysis import top_by_prog_ratio, filter_midfielders, resumen_estadisticas
 
+import pandas as pd
+import pytest
+
+from united_passing.analysis import filter_midfielders, resumen_estadisticas, top_by_prog_ratio
+from united_passing.data import build_midfield_report, clean_passes
 
 # ── Fixtures ──────────────────────────────────────────────────────────────────
 
+
 @pytest.fixture
 def raw_df() -> pd.DataFrame:
-    return pd.DataFrame({
-        "Player":  ["Bruno Fernandes", "Casemiro", "Kobbie Mainoo", ""],
-        "Pos":     ["MF", "MF", "MF", "DF"],
-        "Cmp":     ["80", "60", "45", ""],
-        "Att":     ["95", "72", "55", "30"],
-        "Prog":    ["20", "10", "15", ""],
-        "xA":      ["3.1", "0.8", "1.2", ""],
-        "EmptyCol": [None, None, None, None],
-    })
+    return pd.DataFrame(
+        {
+            "Player": ["Bruno Fernandes", "Casemiro", "Kobbie Mainoo", ""],
+            "Pos": ["MF", "MF", "MF", "DF"],
+            "Cmp": ["80", "60", "45", ""],
+            "Att": ["95", "72", "55", "30"],
+            "Prog": ["20", "10", "15", ""],
+            "xA": ["3.1", "0.8", "1.2", ""],
+            "EmptyCol": [None, None, None, None],
+        }
+    )
 
 
 @pytest.fixture
@@ -27,6 +30,7 @@ def clean_df(raw_df) -> pd.DataFrame:
 
 
 # ── Tests: clean_passes ───────────────────────────────────────────────────────
+
 
 def test_clean_removes_empty_columns(clean_df):
     assert "EmptyCol" not in clean_df.columns
@@ -43,6 +47,7 @@ def test_clean_empty_string_to_nan(clean_df):
 
 
 # ── Tests: build_midfield_report ──────────────────────────────────────────────
+
 
 def test_build_midfield_report_filters_mf(clean_df):
     report = build_midfield_report(clean_df)
@@ -61,6 +66,7 @@ def test_build_midfield_report_sorted_desc(clean_df):
 
 
 # ── Tests: analysis ───────────────────────────────────────────────────────────
+
 
 def test_top_by_prog_ratio_calculates_if_missing(clean_df):
     result = top_by_prog_ratio(clean_df, top_n=2)
@@ -92,7 +98,9 @@ def test_resumen_estadisticas_cols(clean_df):
 
 # ── Tests: load_data (smoke) ──────────────────────────────────────────────────
 
+
 def test_load_data_file_not_found():
     from united_passing.data import load_data
+
     with pytest.raises(FileNotFoundError):
         load_data(passes_path="no_existe.csv")

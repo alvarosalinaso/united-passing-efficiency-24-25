@@ -1,5 +1,8 @@
 """Módulo de análisis de eficiencia de pases del Manchester United."""
+
 import pandas as pd
+
+from united_passing.data import _prog_ratio
 
 
 def top_by_prog_ratio(df: pd.DataFrame, top_n: int = 10) -> pd.DataFrame:
@@ -20,10 +23,7 @@ def top_by_prog_ratio(df: pd.DataFrame, top_n: int = 10) -> pd.DataFrame:
 
     if "Prog_Ratio" not in df.columns:
         if {"Prog", "Cmp"}.issubset(df.columns):
-            df["Prog_Ratio"] = df.apply(
-                lambda r: round(r["Prog"] / r["Cmp"], 4) if r["Cmp"] > 0 else 0.0,
-                axis=1,
-            )
+            df["Prog_Ratio"] = _prog_ratio(df)
         else:
             return df.head(top_n)
 

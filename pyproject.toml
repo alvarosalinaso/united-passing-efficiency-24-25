@@ -6,28 +6,54 @@ build-backend = "setuptools.build_meta"
 name = "united_passing"
 version = "0.1.0"
 authors = [
-  { name="Alvaro Salinas Ortiz", email="" },
+  { name = "Alvaro Salinas Ortiz", email = "" },
 ]
 description = "Análisis de eficiencia de pases del Manchester United"
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.9"
+license = { text = "MIT" }
 classifiers = [
+    "Development Status :: 3 - Alpha",
     "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
 dependencies = [
-    "pandas",
-    "matplotlib",
-    "seaborn",
+    "pandas>=2.0",
+    "matplotlib>=3.7",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-cov>=4.0",
+    "ruff>=0.5",
+    "seaborn>=0.13",
+    "numpy>=1.24",
 ]
 
 [project.urls]
 "Homepage" = "https://github.com/alvarosalinaso/united-passing-efficiency-24-25"
+"Bug Tracker" = "https://github.com/alvarosalinaso/united-passing-efficiency-24-25/issues"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py39"
+
+[tool.ruff.lint]
+select = [
+    "E", "W", "F", "I", "UP", "B", "SIM", "C4",
+]
+ignore = ["E501"]
 
 [tool.pytest.ini_options]
-minversion = "6.0"
-addopts = "-ra -q"
-testpaths = [
-    "tests",
-]
+minversion = "7.0"
+addopts = "-ra -q --cov=united_passing --cov-report=term-missing --cov-report=xml"
+testpaths = ["tests"]
