@@ -1,12 +1,13 @@
 """Módulo de visualización de pases del Manchester United."""
+
 from pathlib import Path
 
 import matplotlib.pyplot as plt
-import matplotlib.ticker as mticker
 import pandas as pd
 
 try:
     import seaborn as sns
+
     sns.set_theme(style="whitegrid", palette="muted")
     HAS_SEABORN = True
 except ImportError:
@@ -54,15 +55,28 @@ def plot_top_passers(
     colores = [_RED if i == 0 else _DARK for i in range(len(df_top))]
 
     if HAS_SEABORN:
-        sns.barplot(x=metric, y="Player", data=df_top, palette=colores, ax=ax)
+        sns.barplot(
+            x=metric,
+            y="Player",
+            data=df_top,
+            hue="Player",
+            palette=colores,
+            ax=ax,
+            legend=False,
+        )
     else:
         ax.barh(df_top["Player"][::-1], df_top[metric][::-1], color=colores[::-1])
 
     ax.set_xlabel(metric, fontsize=11)
     ax.set_ylabel("")
     ax.set_title(f"Top {top_n} jugadores — {metric} | Man Utd 2024/25", fontweight="bold")
-    ax.axvline(df_top[metric].mean(), color="gray", linestyle="--", linewidth=0.8,
-               label=f"Media: {df_top[metric].mean():.1f}")
+    ax.axvline(
+        df_top[metric].mean(),
+        color="gray",
+        linestyle="--",
+        linewidth=0.8,
+        label=f"Media: {df_top[metric].mean():.1f}",
+    )
     ax.legend(fontsize=8)
 
     return _guardar(fig, out_path)
@@ -87,18 +101,34 @@ def plot_prog_ratio_scatter(
 
     fig, ax = plt.subplots(figsize=(10, 7))
 
-    ax.scatter(df["Cmp"], df["Prog_Ratio"], color=_RED, s=100, edgecolors=_DARK,
-               linewidth=0.6, zorder=3)
+    ax.scatter(
+        df["Cmp"], df["Prog_Ratio"], color=_RED, s=100, edgecolors=_DARK, linewidth=0.6, zorder=3
+    )
 
     if "Player" in df.columns:
         for _, row in df.iterrows():
-            ax.annotate(row["Player"], xy=(row["Cmp"], row["Prog_Ratio"]),
-                        xytext=(4, 3), textcoords="offset points", fontsize=8)
+            ax.annotate(
+                row["Player"],
+                xy=(row["Cmp"], row["Prog_Ratio"]),
+                xytext=(4, 3),
+                textcoords="offset points",
+                fontsize=8,
+            )
 
-    ax.axhline(df["Prog_Ratio"].mean(), color="gray", linestyle="--", linewidth=0.8,
-               label=f"Media Prog_Ratio: {df['Prog_Ratio'].mean():.3f}")
-    ax.axvline(df["Cmp"].mean(), color="gray", linestyle=":", linewidth=0.8,
-               label=f"Media Cmp: {df['Cmp'].mean():.0f}")
+    ax.axhline(
+        df["Prog_Ratio"].mean(),
+        color="gray",
+        linestyle="--",
+        linewidth=0.8,
+        label=f"Media Prog_Ratio: {df['Prog_Ratio'].mean():.3f}",
+    )
+    ax.axvline(
+        df["Cmp"].mean(),
+        color="gray",
+        linestyle=":",
+        linewidth=0.8,
+        label=f"Media Cmp: {df['Cmp'].mean():.0f}",
+    )
 
     ax.set_xlabel("Pases Completados (Cmp)", fontsize=11)
     ax.set_ylabel("Ratio de Pases Progresivos (Prog/Cmp)", fontsize=11)
