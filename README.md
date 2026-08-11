@@ -20,7 +20,7 @@ Dashboard táctico que analiza la eficiencia de pases del mediocampo del Manches
 
 ## Dashboard en Vivo
 
-👉 **[united-passing-efficiency-24-25.streamlit.app](https://united-passing-efficiency-24-25.streamlit.app)**
+👉 **[united-passing-efficiency-24-25.streamlit.app](https://united-passing-efficiency-24-25.streamlit.app)** — *Se activa al desplegar en Streamlit Cloud.*
 
 ## Stack
 
