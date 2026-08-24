@@ -54,9 +54,6 @@ ipython_config.py
 *.pem
 *.key
 
-# Streamlit
-.streamlit/
-
 # OS generated files
 .DS_Store
 .DS_Store?
