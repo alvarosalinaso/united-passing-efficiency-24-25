@@ -1,0 +1,32 @@
+Player,position,betweenness,pass_accuracy
+Scott McTominay,MF,1.0,100.0
+Bruno Fernandes,MF,0.8821,75.8
+Casemiro,MF,0.6563,80.8
+Rasmus Højlund,FW,0.6531,76.9
+Christian Eriksen,MF,0.647,79.2
+Mason Mount,MF,0.6131,80.7
+Marcus Rashford,FW,0.6013,73.8
+Amad Diallo,MF,0.5613,83.7
+Joshua Zirkzee,FW,0.5476,72.0
+Alejandro Garnacho,MF,0.5371,78.9
+Lisandro Martínez,DF,0.5291,90.1
+Tyrell Malacia,DF,0.5025,83.9
+Luke Shaw,DF,0.4832,87.0
+Patrick Dorgu,DF,0.4746,79.2
+Noussair Mazraoui,DF,0.4705,86.9
+Kobbie Mainoo,MF,0.4698,86.9
+Antony,DF,0.4688,83.1
+Manuel Ugarte,MF,0.4128,86.8
+Diogo Dalot,DF,0.3916,81.3
+Leny Yoro,DF,0.3507,92.4
+Tyler Fredricson,DF,0.3279,90.2
+Harry Maguire,DF,0.3051,86.4
+Victor Lindelöf,DF,0.2636,92.7
+Jonny Evans,DF,0.2483,90.1
+Ayden Heaven,DF,0.2258,85.2
+Matthijs de Ligt,DF,0.2208,90.3
+Toby Collyer,MF,0.2128,88.3
+Chidozie Obi-Martin,FW,0.2083,83.3
+Harry Amass,DF,0.1478,82.3
+André Onana,GK,0.1292,73.3
+Altay Bayındır,GK,0.0237,65.9
