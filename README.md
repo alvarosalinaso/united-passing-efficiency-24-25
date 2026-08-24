@@ -1,15 +1,16 @@
-# Passing Efficiency — Manchester United 2024-25
+# United Passing Network — Manchester United 2024-25
 
 [![CI](https://github.com/alvarosalinaso/united-passing-efficiency-24-25/actions/workflows/ci.yml/badge.svg)](https://github.com/alvarosalinaso/united-passing-efficiency-24-25/actions/workflows/ci.yml)
 [![Python](https://img.shields.io/badge/Python-3.9%2B-blue)](https://python.org)
-[![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?logo=streamlit)](https://streamlit.io)
+[![Plotly.js](https://img.shields.io/badge/Plotly.js-3.x-3F4F75?logo=plotly&logoColor=white)](https://plotly.com/javascript/)
+[![NetworkX](https://img.shields.io/badge/NetworkX-3.x-8A2BE2)](https://networkx.org)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
-Dashboard táctico que analiza la eficiencia de pases del mediocampo del Manchester United (temporada 2024-2025). Incluye ranking de jugadores, mapas de calor por zona del campo, redes de pases basadas en grafos y evolución temporal de métricas clave.
+Dashboard táctico que analiza la eficiencia de pases del mediocampo del Manchester United (temporada 2024-2025) usando **Complex Network Analysis**. Incluye: redes de pases interactivas (betweenness centrality), comparativas individuales multi-métrica, benchmark vs Premier League, y análisis de rendimiento contra Top 6 vs Resto PL.
 
 ## Tabla de contenidos
 
-- [Dashboard en Vivo](#dashboard-en-vivo)
+- [Dashboard Integrado](#dashboard-integrado)
 - [Stack](#stack)
 - [Arquitectura](#arquitectura)
 - [Instalación](#instalación)
@@ -18,18 +19,25 @@ Dashboard táctico que analiza la eficiencia de pases del mediocampo del Manches
 - [Contribución](#contribución)
 - [Licencia](#licencia)
 
-## Dashboard en Vivo
+## Dashboard Integrado
 
-👉 **[united-passing-efficiency-24-25.streamlit.app](https://united-passing-efficiency-24-25.streamlit.app)** — *Se activa al desplegar en Streamlit Cloud.*
+👉 **Integrado en [Portfolio Web](https://alvarosalinaso.github.io/portfolio-web/)** → Tab **"🕸️ Red de Pases United"**  
+4 vistas interactivas:
+- **🗺️ Red de Pases** — Grafo interactivo con betweenness centrality, filtro por rival (Top 6 / Resto PL)
+- **📐 Comparativa Individual** — Scatter plot multi-eje (xT, pases progresivos, precisión, verticalidad)
+- **⚖️ Benchmark vs Premier League** — Ranking United vs 9 equipos PL en posesión, precisión, pases prog., xT
+- **🔄 Resto PL vs Top 6** — Comparativa de métricas según nivel de rival
+
+Desplegado en GitHub Pages (estático, sin backend Python).
 
 ## Stack
 
 | Capa | Tecnología |
 |------|-----------|
-| **Lenguaje** | Python 3.9+ |
+| **Lenguaje** | Python 3.9+ (ETL/Análisis) · JavaScript/Plotly.js (Frontend) |
 | **Data** | Pandas, NumPy |
-| **Visualización** | Streamlit, Plotly, Matplotlib |
-| **Análisis** | SciPy (métricas de centralidad en grafos de pases) |
+| **Análisis de Redes** | NetworkX (betweenness, degree centrality) |
+| **Visualización** | **Plotly.js** (integrado en Portfolio Web), Matplotlib |
 | **Testing** | Pytest, Pytest-cov |
 | **Lint & Format** | Ruff |
 | **CI/CD** | GitHub Actions (matrix 3.9–3.13) |
@@ -38,19 +46,16 @@ Dashboard táctico que analiza la eficiencia de pases del mediocampo del Manches
 ## Arquitectura
 
 ```
-┌─────────────┐   ┌──────────────┐   ┌──────────────┐
-│  data.py    │──▶│ analysis.py  │──▶│   plot.py    │
-│ (carga/     │   │ (métricas)   │   │ (visualiza)  │
-│  limpieza)  │   └──────────────┘   └──────────────┘
-└─────────────┘                                  │
-      │                                         ▼
-      └───────────▶ app.py (Streamlit) ──▶ Dashboard
+┌─────────────┐   ┌──────────────────┐   ┌─────────────────┐
+│  data.py    │──▶│ network_analysis │──▶│  json_export    │
+│ (pases/     │   │ (NetworkX:       │   │ (squad, passes, │
+│  métricas)  │   │  betweenness,    │   │  stats, PL)     │
+└─────────────┘   │   centrality)    │   └─────────────────┘
+      │           └──────────────────┘            │
+      │                                           ▼
+      └────────────────▶ portfolio-web/public/data/ ──▶ Plotly.js charts
+                                                        (Vanilla JS modules)
 ```
-
-- **data.py** — carga, resolución de rutas y limpieza vectorizada (sin `apply` en bucles).
-- **analysis.py** — métricas tácticas y top-N por ratio progresivo.
-- **plot.py** — visualizaciones Matplotlib/Seaborn reutilizables.
-- **app.py** — capa de presentación (Streamlit) que orquesta los módulos.
 
 ## Estructura
 
@@ -58,11 +63,10 @@ Dashboard táctico que analiza la eficiencia de pases del mediocampo del Manches
 united-passing-efficiency-24-25/
 ├── src/united_passing/     # Paquete principal
 │   ├── data.py             # Carga y validación
-│   ├── analysis.py         # Métricas tácticas
-│   └── plot.py             # Visualizaciones
+│   ├── network_analysis.py # Métricas de grafos (NetworkX)
+│   └── export_json.py      # Exporta datos a portfolio-web
 ├── tests/                  # Tests unitarios e integración
 ├── .github/workflows/      # CI pipeline (lint + matrix de tests + coverage)
-├── app.py                  # Dashboard Streamlit
 ├── passing.csv             # Datos de pases
 ├── reporte_mediocampo.csv  # Reporte filtrado mediocampo
 ├── pyproject.toml          # Configuración (build, ruff, pytest, coverage)
@@ -85,11 +89,15 @@ Para desarrollo (incluye linters y tests):
 pip install -e ".[dev]"
 ```
 
-## Inicio Rápido
+## Generar datos para Portfolio Web
 
 ```bash
-streamlit run app.py
+python src/united_passing/export_json.py
 ```
+
+## Ver Dashboard Interactivo
+
+**[https://alvarosalinaso.github.io/portfolio-web/](https://alvarosalinaso.github.io/portfolio-web/)** → Tab **"🕸️ Red de Pases United"**
 
 ## Testing
 
