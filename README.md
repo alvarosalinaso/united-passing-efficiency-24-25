@@ -124,6 +124,38 @@ Live deployment: **https://alvarosalinaso.github.io/portfolio-web/** (Tab: "Red 
 
 ---
 
+## Visual Analytics
+
+Interactividad multinivel para exploración de datos y presentación ejecutiva.
+
+<details>
+<summary><strong>Datawrapper — Gráfico interactivo</strong></summary>
+
+<div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;max-width:100%;">
+  <iframe src="https://datawrapper.dwcdn.net/BlxD1/" title="Benchmark de Pases — Manchester United vs Promedio PL" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;" loading="lazy" allowfullscreen></iframe>
+</div>
+</details>
+
+<details>
+<summary><strong>Flourish — Visualización animada</strong></summary>
+
+<div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;max-width:100%;">
+  <iframe src="https://flo.uri.sh/visualisation/482157/embed" title="Red de Pases Interactiva — Manchester United 2024-25" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;" loading="lazy" allowfullscreen></iframe>
+</div>
+</details>
+
+<details>
+<summary><strong>Observable — Notebook interactivo</strong></summary>
+
+<div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;max-width:100%;">
+  <iframe src="https://observablehq.com/@alvarosalinaso/passing-centrality" title="Centralidad Betweenness vs Precisión de Pase" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;" loading="lazy" allowfullscreen></iframe>
+</div>
+</details>
+
+**Hallazgos clave**: Bruno Fernandes concentra la centralidad de intermediación (betweenness) siendo el nodo crítico del sistema de pases.
+
+---
+
 ## 5. Reproducibilidad y Entorno Tecnico
 
 ### 5.1 Environment
