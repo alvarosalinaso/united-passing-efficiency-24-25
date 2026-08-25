@@ -108,5 +108,13 @@ united-passing-efficiency-24-25/
 
 ---
 
+## Related projects
+
+- [Manchester United Analysis](https://github.com/alvarosalinaso/manchester-united-analisis) — Causal analysis of managerial changes
+- [Tactical Graph Theory](https://github.com/alvarosalinaso/tactical-narrative-graph-analysis) — NetworkX graph visualization
+- [Portfolio Web](https://github.com/alvarosalinaso/portfolio-web) — Dashboard with all projects
+
+---
+
 > **Álvaro Salinas Ortiz**
 > [LinkedIn](https://www.linkedin.com/in/alvaro-salinas-ortiz) | [Portfolio](https://alvarosalinaso.github.io/portfolio-web/)
