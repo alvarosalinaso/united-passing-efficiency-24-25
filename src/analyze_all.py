@@ -2,13 +2,14 @@
 Orchestrador principal — United Passing Efficiency 2024-25.
 Ejecuta todo el pipeline de analisis.
 """
-from clustering_analysis import run_clustering
-from graph_analysis import run_graph_analysis
-from forecasting import run_forecasting
-from similarity_analysis import run_similarity
+
 from ab_testing import run_ab_testing
-from statistical_tests import run_statistical_tests
+from clustering_analysis import run_clustering
+from forecasting import run_forecasting
 from generate_tables import generate as generate_exec_tables
+from graph_analysis import run_graph_analysis
+from similarity_analysis import run_similarity
+from statistical_tests import run_statistical_tests
 
 
 def main():

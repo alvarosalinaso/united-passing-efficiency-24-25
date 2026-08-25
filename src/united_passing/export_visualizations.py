@@ -44,6 +44,7 @@ def _resolver_ruta(nombre: str) -> Path:
 
     raise FileNotFoundError(f"No se encontró '{nombre}'. Colócalo en la raíz del proyecto.")
 
+
 # Promedios de la Premier League 2024-25 (valores de referencia)
 _PL_AVERAGES: dict[str, float] = {
     "Cmp%": 82.5,
@@ -67,8 +68,19 @@ def _load_passes() -> pd.DataFrame:
     df = df[df["Player"].notna() & (df["Player"] != "Total")].copy()
 
     numeric_cols = [
-        "90s", "Cmp", "Att", "Cmp%", "TotDist", "PrgDist",
-        "Ast", "xA", "KP", "1/3", "PPA", "CrsPA", "PrgP",
+        "90s",
+        "Cmp",
+        "Att",
+        "Cmp%",
+        "TotDist",
+        "PrgDist",
+        "Ast",
+        "xA",
+        "KP",
+        "1/3",
+        "PPA",
+        "CrsPA",
+        "PrgP",
     ]
     for col in numeric_cols:
         if col in df.columns:
@@ -99,14 +111,14 @@ def export_benchmark_csv(df: pd.DataFrame) -> Path:
 
     rows = []
     for metric in present:
-        rows.append({
-            "Metric": metric,
-            "Manchester United": united_avg.get(metric, 0),
-            "PL Average": _PL_AVERAGES.get(metric, 0),
-            "Difference": round(
-                united_avg.get(metric, 0) - _PL_AVERAGES.get(metric, 0), 2
-            ),
-        })
+        rows.append(
+            {
+                "Metric": metric,
+                "Manchester United": united_avg.get(metric, 0),
+                "PL Average": _PL_AVERAGES.get(metric, 0),
+                "Difference": round(united_avg.get(metric, 0) - _PL_AVERAGES.get(metric, 0), 2),
+            }
+        )
 
     out_df = pd.DataFrame(rows)
     path = _EXPORT_DIR / "dw_benchmark_passing.csv"
@@ -141,18 +153,18 @@ def export_network_csv(df: pd.DataFrame) -> Path:
             max_cmp = max(row_i["Cmp"], row_j["Cmp"], 1)
             max_prgp = max(row_i["PrgP"], row_j["PrgP"], 1)
 
-            similarity = 1.0 - (
-                0.5 * (cmp_diff / max_cmp) + 0.5 * (prgp_diff / max_prgp)
-            )
+            similarity = 1.0 - (0.5 * (cmp_diff / max_cmp) + 0.5 * (prgp_diff / max_prgp))
 
             if similarity > 0.4:
-                edges.append({
-                    "source": row_i["short"],
-                    "target": row_j["short"],
-                    "weight": round(similarity, 4),
-                    "source_position": row_i["Pos_base"],
-                    "target_position": row_j["Pos_base"],
-                })
+                edges.append(
+                    {
+                        "source": row_i["short"],
+                        "target": row_j["short"],
+                        "weight": round(similarity, 4),
+                        "source_position": row_i["Pos_base"],
+                        "target_position": row_j["Pos_base"],
+                    }
+                )
 
     out_df = pd.DataFrame(edges)
     path = _EXPORT_DIR / "flourish_network_pases.csv"

@@ -1,17 +1,21 @@
 """Tests estadísticos para análisis de pases Manchester United."""
+
 import json
 from pathlib import Path
 
 try:
-    import pandas as pd
     import numpy as np
+    import pandas as pd
     from scipy import stats
+
     SCIPY_AVAILABLE = True
 except ImportError:
     SCIPY_AVAILABLE = False
 
 
-def run_statistical_tests(data_dir: Path = Path("data/export"), output_dir: Path = Path("data/export")) -> dict:
+def run_statistical_tests(
+    data_dir: Path = Path("data/export"), output_dir: Path = Path("data/export")
+) -> dict:
     if not SCIPY_AVAILABLE:
         return {}
 
@@ -30,7 +34,7 @@ def run_statistical_tests(data_dir: Path = Path("data/export"), output_dir: Path
             max_corr = 0
             best_pair = ("", "")
             for i in range(len(num_cols)):
-                for j in range(i+1, len(num_cols)):
+                for j in range(i + 1, len(num_cols)):
                     c = abs(corr_matrix.iloc[i, j])
                     if c > max_corr:
                         max_corr = c

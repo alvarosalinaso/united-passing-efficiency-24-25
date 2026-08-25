@@ -2,22 +2,26 @@
 Clusterizacion de jugadores por metricas de pases.
 K-Means + elbow + silhouette + PCA visualization.
 """
+
 import json
 from pathlib import Path
 
 try:
-    import pandas as pd
     import numpy as np
+    import pandas as pd
     from sklearn.cluster import KMeans
-    from sklearn.preprocessing import StandardScaler
-    from sklearn.metrics import silhouette_score
     from sklearn.decomposition import PCA
+    from sklearn.metrics import silhouette_score
+    from sklearn.preprocessing import StandardScaler
+
     AVAILABLE = True
 except ImportError:
     AVAILABLE = False
 
 
-def run_clustering(data_dir: Path = Path("data/export"), output_dir: Path = Path("data/export")) -> dict:
+def run_clustering(
+    data_dir: Path = Path("data/export"), output_dir: Path = Path("data/export")
+) -> dict:
     if not AVAILABLE:
         print("[CLUSTER] scikit-learn no instalado")
         return {}
@@ -52,7 +56,7 @@ def run_clustering(data_dir: Path = Path("data/export"), output_dir: Path = Path
 
         # PCA for visualization
         pca = PCA(n_components=2)
-        X_pca = pca.fit_transform(X_scaled)
+        X_pca = pca.fit_transform(X_scaled)  # noqa: F841
 
         profiles = {}
         for c in range(optimal_k):
@@ -72,7 +76,11 @@ def run_clustering(data_dir: Path = Path("data/export"), output_dir: Path = Path
             "profiles": profiles,
             "pca_variance_explained": round(sum(pca.explained_variance_ratio_), 3),
         }
-        print(f"[CLUSTER] {csv_file.stem}: k={optimal_k}, silhouette={max(silhouettes):.3f}" if silhouettes else f"[CLUSTER] {csv_file.stem}: done")
+        print(
+            f"[CLUSTER] {csv_file.stem}: k={optimal_k}, silhouette={max(silhouettes):.3f}"
+            if silhouettes
+            else f"[CLUSTER] {csv_file.stem}: done"
+        )
 
     output_dir.mkdir(parents=True, exist_ok=True)
     with open(output_dir / "clustering_results.json", "w", encoding="utf-8") as f:

@@ -2,21 +2,25 @@
 Forecasting de metricas de pases.
 ARIMA + Exponential Smoothing para predecir eficiencia futura.
 """
+
 import json
 from pathlib import Path
 
 try:
-    import pandas as pd
     import numpy as np
-    from statsmodels.tsa.holtwinters import ExponentialSmoothing
+    import pandas as pd
     from statsmodels.tsa.arima.model import ARIMA
+    from statsmodels.tsa.holtwinters import ExponentialSmoothing  # noqa: F401
     from statsmodels.tsa.stattools import adfuller
+
     AVAILABLE = True
 except ImportError:
     AVAILABLE = False
 
 
-def run_forecasting(data_dir: Path = Path("data/export"), output_dir: Path = Path("data/export")) -> dict:
+def run_forecasting(
+    data_dir: Path = Path("data/export"), output_dir: Path = Path("data/export")
+) -> dict:
     if not AVAILABLE:
         print("[FORECAST] statsmodels no instalado")
         return {}
