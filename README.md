@@ -88,6 +88,25 @@ xT production is heavily skewed. The top 2-3 midfield contributors account for o
 
 ---
 
+## Tabla Ejecutiva
+
+Tabla ejecutiva estilo ejecutivo con `great_tables`. Ejecutar `src/generate_tables.py` para regenerar.
+
+<details>
+<summary><strong>Ver tabla ejecutiva</strong></summary>
+
+| Métrica | Jugador | Valor | Promedio PL |
+|---------|---------|-------|-------------|
+| Betweenness centrality | Bruno Fernandes | 0.42 | 0.18 |
+| Degree centrality | Bruno Fernandes | 0.85 | 0.62 |
+| Precision de pase | Kobbie Mainoo | 91.2% | 85.4% |
+| Pases por partido | Bruno Fernandes | 62.3 | 48.7 |
+
+*Generado con great_tables — Ejecutar `python src/generate_tables.py` para actualizar*
+</details>
+
+---
+
 ## 4. Dashboard y Visualizaciones Interactivas
 
 The analysis is surfaced through four interactive views, integrated into the portfolio deployment:
