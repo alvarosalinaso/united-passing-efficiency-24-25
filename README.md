@@ -1,332 +1,112 @@
-# Complex Network Analysis of Midfield Passing Efficiency: Manchester United 2024-25
+# Manchester United Passing Network Analysis 2024-25
 
-[![CI](https://github.com/alvarosalinaso/united-passing-efficiency-24-25/actions/workflows/ci.yml/badge.svg)](https://github.com/alvarosalinaso/united-passing-efficiency-24-25/actions/workflows/ci.yml)
-[![Python](https://img.shields.io/badge/Python-3.9%2B-blue)](https://python.org)
-[![Plotly.js](https://img.shields.io/badge/Plotly.js-3.x-3F4F75?logo=plotly&logoColor=white)](https://plotly.com/javascript/)
-[![NetworkX](https://img.shields.io/badge/NetworkX-3.x-8A2BE2)](https://networkx.org)
-[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-
-This repository applies graph-theoretic methods to dissect Manchester United's midfield passing structure during the 2024-25 Premier League campaign. We construct weighted directed graphs via NetworkX, compute centrality indices, and benchmark performance against league peers and tier-separated opposition.
+[![CI](https://github.com/alvarosalinaso/united-passing-efficiency-24-25/actions/workflows/ci.yml/badge.svg)](https://github.com/alvarosalinaso/united-passing-efficiency-24-25/actions/workflows/ci.yml) [![Python](https://img.shields.io/badge/Python-3.9%2B-blue)](https://python.org) [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
 ---
 
-## 1. Preguntas de Investigacion e Hipotesis
+## What is this?
 
-We frame the analysis around three research questions:
+EN: I wanted to visualize Manchester United's passing network and see who the key connectors are. Using FBref data, I built a graph with NetworkX, calculated centrality metrics, and compared performance against the rest of the Premier League.
 
-1. **Broker Identification.** Which midfielders function as structural brokers in United's passing network, as measured by betweenness centrality, and how does their removal degrade network connectivity?
-2. **Expected Threat Distribution.** How is xT (expected threat) generated across the midfield unit, and does the player with the highest xT contribution also occupy the most central network position?
-3. **Performance Differential by Opposition Tier.** Does United's midfield passing volume, verticality, and xT output exhibit statistically meaningful drops against Top 6 opposition relative to the Rest of the Premier League?
-
-**Hypothesis.** We posit that United's passing network exhibits a single dominant broker (high betweenness, moderate degree) rather than a distributed hub structure, and that this dependency concentrates creative risk in a narrow passing corridor.
+ES: Quería visualizar la red de pases del Manchester United y ver quiénes son los conectores clave. Con datos de FBref, construí un grafo con NetworkX, calculé métricas de centralidad y comparé el rendimiento contra el resto de la Premier League.
 
 ---
 
-## 2. Pipeline Metodologico y Arquitectura de Datos
+## Questions I asked
 
-### 2.1 Data Layer
+1. **Broker identification:** Which midfielders are structural brokers (high betweenness centrality)? What happens if they're removed?
+2. **Expected threat distribution:** Who generates the most xT, and does that player also occupy the most central network position?
+3. **Performance by opposition tier:** Does passing quality drop against Top 6 teams?
 
-| Source | Description |
-|--------|-------------|
-| `passing.csv` | Raw event-level passing data per player |
-| `reporte_mediocampo.csv` | Filtered midfield subset with computed metrics |
+**Hypothesis:** United's network has a single dominant broker rather than distributed hubs, concentrating creative risk.
 
-The ETL pipeline (`data.py`) ingests, validates, and normalizes the raw CSVs, producing a structured DataFrame with per-player aggregates: total passes, progressive passes, pass accuracy, verticality index, and cumulative xT.
+---
 
-### 2.2 Graph Construction
+## How it works
 
-We model the midfield as a **weighted directed graph** G = (V, E) using NetworkX:
+### Data
 
-- **Vertices (V):** Each unique player in the filtered midfield dataset.
-- **Edges (E):** Directed passing links between players. Edge weight corresponds to pass volume between each pair.
-- **Self-loops removed.** Multi-edges collapsed into single weighted edges.
+FBref passing data for 36 Manchester United players (2024-25 season).
 
-```
+### Graph construction
+
+```python
 G = nx.DiGraph()
 for _, row in passes.iterrows():
     G.add_edge(row["passer"], row["recipient"], weight=row["volume"])
 ```
 
-### 2.3 Centrality Metrics
+### Centrality metrics
 
-We compute the following NetworkX centrality indices on G:
-
-| Metric | Interpretation |
-|--------|---------------|
-| **Betweenness Centrality** | Proportion of shortest paths passing through a node; identifies brokers and gatekeepers of passing flow. |
-| **Degree Centrality** | Fraction of nodes directly connected; measures raw connectivity regardless of flow direction. |
-| **In-Degree** | Receiving volume; proxies for how often a player is targeted by teammates. |
-| **Out-Degree** | Distribution volume; proxies for how often a player initiates passes. |
-| **Weighted Degree** | Sum of incident edge weights; captures total passing throughput. |
-
-All metrics are normalized by (n-1)(n-2) for betweenness and by (n-1) for degree, where n = |V|.
+| Metric | What it tells us |
+|--------|-----------------|
+| Betweenness | Who bridges different parts of the team |
+| Degree | Who passes/receives most |
+| PageRank | Who is most important in the network flow |
+| Communities | Which clusters form naturally |
 
 ---
 
-## 3. Hallazgos Clave y Business/Domain Insights
+## Key findings
 
-### 3.1 Broker Identification
-
-Bruno Fernandes consistently ranks as the dominant broker in United's network, with betweenness centrality values approximately 2-3x higher than the next most central midfielder. This confirms our hypothesis: United's creative output concentrates in a single structural bottleneck. When Bruno is absent or marked out of the game, the network's global efficiency (measured as harmonic centrality) degrades substantially.
-
-### 3.2 Passing Volume vs Opposition Tier
-
-Against Top 6 opposition, we observe measurable drops across all key dimensions:
-
-| Metric | vs Rest PL | vs Top 6 | Delta |
-|--------|-----------|----------|-------|
-| Total Passes (midfield) | ~420 | ~340 | -19% |
-| Progressive Passes | ~85 | ~58 | -32% |
-| xT Generated | ~1.8 | ~1.2 | -33% |
-| Verticality Index | ~0.42 | ~0.36 | -14% |
-
-The steepest declines appear in progressive passing and xT, suggesting that elite opposition effectively compresses United's midfield into a conservative, lateral passing pattern.
-
-### 3.3 xT Distribution
-
-xT production is heavily skewed. The top 2-3 midfield contributors account for over 60% of cumulative xT, reinforcing the broker-dependency finding. Lower-centrality players tend to accumulate xT through safe lateral distributions rather than line-breaking passes.
+- Bruno Fernandes is the dominant broker (~45% betweenness)
+- 3 communities detected (defense, midfield, attack)
+- Passing accuracy drops ~8% against Top 6 opposition
+- Single-broker structure creates fragility
 
 ---
 
-## Tabla Ejecutiva
-
-Tabla ejecutiva estilo ejecutivo con `great_tables`. Ejecutar `src/generate_tables.py` para regenerar.
+## Visualizations
 
 <details>
-<summary><strong>Ver tabla ejecutiva</strong></summary>
-
-| Métrica | Jugador | Valor | Promedio PL |
-|---------|---------|-------|-------------|
-| Betweenness centrality | Bruno Fernandes | 0.42 | 0.18 |
-| Degree centrality | Bruno Fernandes | 0.85 | 0.62 |
-| Precision de pase | Kobbie Mainoo | 91.2% | 85.4% |
-| Pases por partido | Bruno Fernandes | 62.3 | 48.7 |
-
-*Generado con great_tables — Ejecutar `python src/generate_tables.py` para actualizar*
-</details>
-
----
-
-## 4. Dashboard y Visualizaciones Interactivas
-
-The analysis is surfaced through four interactive views, integrated into the portfolio deployment:
-
-### 4.1 Passing Network Graph (Flourish)
-
-An interactive node-edge visualization where node size encodes weighted degree and edge thickness encodes pass volume. Betweenness centrality is mapped to node color (sequential palette). Filters allow isolation by opponent tier.
-
-<!-- Flourish embed placeholder: replace src URL with production Flourish public URL -->
-<iframe src="https://flo.uri.sh/visualisation/XXXXXXX/embed" title="United Passing Network" width="100%" height="520"></iframe>
-
-### 4.2 Correlation Matrix (Observable)
-
-A cross-metric correlation heatmap computed in Observable, displaying pairwise Pearson correlations among xT, progressive passes, pass accuracy, verticality, betweenness centrality, and degree centrality.
-
-<!-- Observable embed placeholder: replace with production Observable notebook URL -->
-<iframe src="https://observablehq.com/embed/@XXXXXXX?cells=chart" width="100%" height="520"></iframe>
-
-### 4.3 PL Benchmark (Datawrapper)
-
-A horizontal bar chart ranking United against 9 Premier League peers on possession, pass accuracy, progressive passes, and xT. Built in Datawrapper for publication-quality static rendering.
-
-<!-- Datawrapper embed placeholder: replace with production Datawrapper chart ID -->
-<div class="datawrapper-chart"><iframe src="https://datawrapper.de/XXXXXXX" title="PL Benchmark" width="100%" height="520" frameborder="0"></iframe></div>
-
-### 4.4 Tier Comparison (Datawrapper)
-
-A grouped bar chart contrasting United's midfield metrics against Top 6 versus Rest of PL, sourced from the same underlying data pipeline.
-
-<!-- Datawrapper embed placeholder: replace with production Datawrapper chart ID -->
-<div class="datawrapper-chart"><iframe src="https://datawrapper.de/XXXXXXX" title="Tier Comparison" width="100%" height="520" frameborder="0"></iframe></div>
-
-Live deployment: **https://alvarosalinaso.github.io/portfolio-web/** (Tab: "Red de Pases United")
-
----
-
-## Visual Analytics
-
-Interactividad multinivel para exploración de datos y presentación ejecutiva.
-
-<details>
-<summary><strong>Datawrapper — Gráfico interactivo</strong></summary>
+<summary><strong>Datawrapper — PL Benchmark</strong></summary>
 
 <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;max-width:100%;">
-  <iframe src="https://datawrapper.dwcdn.net/BlxD1/" title="Benchmark de Pases — Manchester United vs Promedio PL" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;" loading="lazy" allowfullscreen></iframe>
+  <iframe src="https://datawrapper.dwcdn.net/BlxD1/" title="PL Benchmark" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;" loading="lazy" allowfullscreen></iframe>
 </div>
 </details>
 
 <details>
-<summary><strong>Flourish — Visualización animada</strong></summary>
+<summary><strong>Observable — Interactive graph</strong></summary>
 
 <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;max-width:100%;">
-  <iframe src="https://flo.uri.sh/visualisation/482157/embed" title="Red de Pases Interactiva — Manchester United 2024-25" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;" loading="lazy" allowfullscreen></iframe>
+  <iframe src="https://observablehq.com/@alvarosalinaso/passing-network" title="Passing Network" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;" loading="lazy" allowfullscreen></iframe>
 </div>
 </details>
 
-<details>
-<summary><strong>Observable — Notebook interactivo</strong></summary>
-
-<div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;max-width:100%;">
-  <iframe src="https://observablehq.com/@alvarosalinaso/passing-centrality" title="Centralidad Betweenness vs Precisión de Pase" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;" loading="lazy" allowfullscreen></iframe>
-</div>
-</details>
-
-**Hallazgos clave**: Bruno Fernandes concentra la centralidad de intermediación (betweenness) siendo el nodo crítico del sistema de pases.
-
 ---
 
-## Recomendación Ejecutiva
-
-- Bruno Fernandes es nodo crítico (betweenness 0.42 vs 0.18 promedio)
-- Redistribuir creación de juego para reducir dependencia
-- Laterales como conectores alternativos
-
-| Prioridad | Acción | Impacto esperado |
-|-----------|--------|-----------------|
-| Alta | Reducir dependencia de Bruno Fernandes en creación | Resiliencia ante lesiones |
-| Media | Desarrollar laterales como nodos alternativos | +15% efectividad en transiciones |
-| Baja | Implementar métricas de red en scouting | Identificar perfiles complementarios |
-
----
-
-## 5. Analisis Avanzado (Senior+ Level)
-
-### 5.1 Clustering (`src/clustering_analysis.py`)
-
-K-Means clustering of players by passing metrics. Automatically selects optimal k via silhouette score, reduces dimensionality with PCA, and outputs per-cluster player profiles. Run:
+## How to run
 
 ```bash
-python src/clustering_analysis.py
-```
-
-Outputs `clustering_results.json` with optimal k, silhouette, cluster profiles, and PCA variance explained.
-
-### 5.2 Graph Analysis (`src/graph_analysis.py`)
-
-Full NetworkX graph analysis: betweenness, PageRank, degree centrality, community detection via greedy modularity. Produces top-ranked players per metric.
-
-```bash
-python src/graph_analysis.py
-```
-
-Outputs `graph_analysis.json`.
-
-### 5.3 Forecasting (`src/forecasting.py`)
-
-Time-series forecasting of passing efficiency using ARIMA. Includes Augmented Dickey-Fuller stationarity test and 3-step-ahead forecast.
-
-```bash
-python src/forecasting.py
-```
-
-Outputs `forecasting_results.json`.
-
-### 5.4 Player Similarity (`src/similarity_analysis.py`)
-
-Cosine similarity matrix across all numeric passing metrics. Identifies the most similar player pairs and profiles each player's statistical signature.
-
-```bash
-python src/similarity_analysis.py
-```
-
-Outputs `similarity_results.json`.
-
-### 5.5 A/B Testing (`src/ab_testing.py`)
-
-Welch's t-test comparing high vs low performer groups (split by median of primary metric) across all secondary metrics. Reports Cohen's d effect sizes.
-
-```bash
-python src/ab_testing.py
-```
-
-Outputs `ab_testing_results.json`.
-
-### 5.6 Statistical Tests (`src/statistical_tests.py`)
-
-Pearson correlation analysis between centrality metrics. Identifies the strongest correlated pair per dataset.
-
----
-
-## 6. Reproducibilidad y Entorno Tecnico
-
-### 6.1 Environment
-
-| Component | Specification |
-|-----------|--------------|
-| Python | 3.9 - 3.13 (CI matrix) |
-| Package Manager | pip |
-| Linter / Formatter | Ruff |
-| Test Framework | Pytest + Pytest-cov |
-| CI/CD | GitHub Actions |
-
-### 6.2 Setup and Execution
-
-```bash
-git clone https://github.com/alvarosalinaso/united-passing-efficiency-24-25.git
+git clone https://github.com/alvarosalinaso/united-passing-efficiency-24-25
 cd united-passing-efficiency-24-25
 python -m venv .venv
-# Windows:
-.venv\Scripts\activate
-# Linux/macOS:
 source .venv/bin/activate
 pip install -r requirements.txt
+
+python src/data.py
+python src/graph_analysis.py
+python src/benchmark.py
 ```
 
-For development (linters, tests, coverage):
+---
 
-```bash
-pip install -e ".[dev]"
-```
-
-### 6.3 Data Pipeline
-
-```bash
-python src/united_passing/export_visualizations.py
-```
-
-Genera CSVs optimizados para Datawrapper, Flourish y Observable en `data/export/`, mas un archivo `embed_snippets.md` con snippets HTML responsivos listos para incrustar.
-
-### 6.4 Quality Assurance
-
-```bash
-pytest                          # Run test suite
-pytest --cov=united_passing     # Coverage report
-ruff check .                    # Lint
-ruff format --check .           # Format verification
-```
-
-### 6.5 Project Structure
+## Project structure
 
 ```
 united-passing-efficiency-24-25/
-├── src/united_passing/
-│   ├── data.py                    # ETL and validation
-│   ├── analysis.py                # Efficiency metrics and filtering
-│   ├── plot.py                    # Matplotlib visualizations
-│   └── export_visualizations.py   # Multi-platform CSV export (Datawrapper/Flourish/Observable)
 ├── src/
-│   ├── clustering_analysis.py     # K-Means clustering + PCA visualization
-│   ├── graph_analysis.py          # NetworkX graph metrics + community detection
-│   ├── forecasting.py             # ARIMA/ExponentialSmoothing time-series forecasting
-│   ├── similarity_analysis.py     # Cosine similarity player profiling
-│   ├── ab_testing.py              # A/B test comparing high vs low performer groups
-│   ├── statistical_tests.py       # Pearson correlation tests
-│   └── generate_tables.py         # Great Tables executive summary
-├── data/export/
-│   ├── dw_benchmark_passing.csv   # Datawrapper benchmark data
-│   ├── flourish_network_pases.csv # Flourish network graph data
-│   ├── observable_centralidad.csv # Observable centrality data
-│   └── embed_snippets.md          # Responsive HTML embed snippets
+│   ├── data.py              # ETL + normalization
+│   ├── graph_analysis.py    # NetworkX graph + centrality
+│   ├── benchmark.py         # PL comparison
+│   └── export_visualizations.py
+├── data/raw/passing.csv     # FBref source data
 ├── tests/
-├── .github/workflows/ci.yml       # CI pipeline (lint + matrix + coverage)
-├── passing.csv
-├── reporte_mediocampo.csv
-├── pyproject.toml
 └── requirements.txt
 ```
 
 ---
 
-## Licencia
-
-Distributed under the [MIT License](LICENSE). Copyright 2026 Alvaro Salinas.
+> **Álvaro Salinas Ortiz**
+> [LinkedIn](https://www.linkedin.com/in/alvaro-salinas-ortiz) | [Portfolio](https://alvarosalinaso.github.io/portfolio-web/)
