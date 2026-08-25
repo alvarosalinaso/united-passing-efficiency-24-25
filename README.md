@@ -189,9 +189,67 @@ Interactividad multinivel para exploración de datos y presentación ejecutiva.
 
 ---
 
-## 5. Reproducibilidad y Entorno Tecnico
+## 5. Analisis Avanzado (Senior+ Level)
 
-### 5.1 Environment
+### 5.1 Clustering (`src/clustering_analysis.py`)
+
+K-Means clustering of players by passing metrics. Automatically selects optimal k via silhouette score, reduces dimensionality with PCA, and outputs per-cluster player profiles. Run:
+
+```bash
+python src/clustering_analysis.py
+```
+
+Outputs `clustering_results.json` with optimal k, silhouette, cluster profiles, and PCA variance explained.
+
+### 5.2 Graph Analysis (`src/graph_analysis.py`)
+
+Full NetworkX graph analysis: betweenness, PageRank, degree centrality, community detection via greedy modularity. Produces top-ranked players per metric.
+
+```bash
+python src/graph_analysis.py
+```
+
+Outputs `graph_analysis.json`.
+
+### 5.3 Forecasting (`src/forecasting.py`)
+
+Time-series forecasting of passing efficiency using ARIMA. Includes Augmented Dickey-Fuller stationarity test and 3-step-ahead forecast.
+
+```bash
+python src/forecasting.py
+```
+
+Outputs `forecasting_results.json`.
+
+### 5.4 Player Similarity (`src/similarity_analysis.py`)
+
+Cosine similarity matrix across all numeric passing metrics. Identifies the most similar player pairs and profiles each player's statistical signature.
+
+```bash
+python src/similarity_analysis.py
+```
+
+Outputs `similarity_results.json`.
+
+### 5.5 A/B Testing (`src/ab_testing.py`)
+
+Welch's t-test comparing high vs low performer groups (split by median of primary metric) across all secondary metrics. Reports Cohen's d effect sizes.
+
+```bash
+python src/ab_testing.py
+```
+
+Outputs `ab_testing_results.json`.
+
+### 5.6 Statistical Tests (`src/statistical_tests.py`)
+
+Pearson correlation analysis between centrality metrics. Identifies the strongest correlated pair per dataset.
+
+---
+
+## 6. Reproducibilidad y Entorno Tecnico
+
+### 6.1 Environment
 
 | Component | Specification |
 |-----------|--------------|
@@ -201,7 +259,7 @@ Interactividad multinivel para exploración de datos y presentación ejecutiva.
 | Test Framework | Pytest + Pytest-cov |
 | CI/CD | GitHub Actions |
 
-### 5.2 Setup and Execution
+### 6.2 Setup and Execution
 
 ```bash
 git clone https://github.com/alvarosalinaso/united-passing-efficiency-24-25.git
@@ -220,7 +278,7 @@ For development (linters, tests, coverage):
 pip install -e ".[dev]"
 ```
 
-### 5.3 Data Pipeline
+### 6.3 Data Pipeline
 
 ```bash
 python src/united_passing/export_visualizations.py
@@ -228,7 +286,7 @@ python src/united_passing/export_visualizations.py
 
 Genera CSVs optimizados para Datawrapper, Flourish y Observable en `data/export/`, mas un archivo `embed_snippets.md` con snippets HTML responsivos listos para incrustar.
 
-### 5.4 Quality Assurance
+### 6.4 Quality Assurance
 
 ```bash
 pytest                          # Run test suite
@@ -237,7 +295,7 @@ ruff check .                    # Lint
 ruff format --check .           # Format verification
 ```
 
-### 5.5 Project Structure
+### 6.5 Project Structure
 
 ```
 united-passing-efficiency-24-25/
@@ -246,6 +304,14 @@ united-passing-efficiency-24-25/
 │   ├── analysis.py                # Efficiency metrics and filtering
 │   ├── plot.py                    # Matplotlib visualizations
 │   └── export_visualizations.py   # Multi-platform CSV export (Datawrapper/Flourish/Observable)
+├── src/
+│   ├── clustering_analysis.py     # K-Means clustering + PCA visualization
+│   ├── graph_analysis.py          # NetworkX graph metrics + community detection
+│   ├── forecasting.py             # ARIMA/ExponentialSmoothing time-series forecasting
+│   ├── similarity_analysis.py     # Cosine similarity player profiling
+│   ├── ab_testing.py              # A/B test comparing high vs low performer groups
+│   ├── statistical_tests.py       # Pearson correlation tests
+│   └── generate_tables.py         # Great Tables executive summary
 ├── data/export/
 │   ├── dw_benchmark_passing.csv   # Datawrapper benchmark data
 │   ├── flourish_network_pases.csv # Flourish network graph data
