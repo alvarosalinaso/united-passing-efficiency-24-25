@@ -7,7 +7,11 @@ from great_tables import GT
 
 
 def generate():
-    df = pd.read_csv("data/export/benchmark_pases.csv", encoding="utf-8")
+    csv_path = Path("data/export/dw_benchmark_passing.csv")
+    if not csv_path.exists():
+        print(f"[TABLE] {csv_path} not found, skipping")
+        return
+    df = pd.read_csv(csv_path, encoding="utf-8")
     if "player" in df.columns and "betweenness" in df.columns:
         top = df.nlargest(5, "betweenness")[["player", "betweenness", "degree", "precision"]]
         top.columns = ["Jugador", "Betweenness", "Degree", "Precisión Pase"]
