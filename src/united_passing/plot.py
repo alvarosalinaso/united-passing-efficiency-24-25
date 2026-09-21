@@ -70,6 +70,8 @@ def plot_top_passers(
     ax.set_xlabel(metric, fontsize=11)
     ax.set_ylabel("")
     ax.set_title(f"Top {top_n} jugadores — {metric} | Man Utd 2024/25", fontweight="bold")
+    fig.text(0.01, 0.01, "Insight: el líder destaca sobre la media → priorizar su rol en salida de balón.",
+             fontsize=8, style="italic", color=_DARK)
     ax.axvline(
         df_top[metric].mean(),
         color="gray",
@@ -135,5 +137,7 @@ def plot_prog_ratio_scatter(
     ax.set_title("Volumen vs Eficiencia Progresiva — Mediocampistas Man Utd", fontweight="bold")
     ax.legend(fontsize=8)
     ax.grid(True, alpha=0.2)
+    fig.text(0.01, 0.01, "Insight: cuadrante superior-derecho = volumen + progresión → perfiles clave para transición.",
+             fontsize=8, style="italic", color=_DARK)
 
     return _guardar(fig, out_path)
