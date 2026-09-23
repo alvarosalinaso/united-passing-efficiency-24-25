@@ -14,7 +14,7 @@ ES: Quería visualizar la red de pases del Manchester United y ver quiénes son 
 
 ## Questions I asked
 
-1. **Broker identification:** Which midfielders are structural brokers (high betweenness centrality)? What happens if they're removed?
+1. **Broker identification:** Which midfielders are structural brokers (high betweenness centrality using the illustrative proxy `(KP + 1/3 + PPA) / (Att + 1)`, not NetworkX unweighted betweenness)? What happens if they're removed?
 2. **Expected threat distribution:** Who generates the most xT, and does that player also occupy the most central network position?
 3. **Performance by opposition tier:** Does passing quality drop against Top 6 teams?
 

@@ -130,7 +130,10 @@ def export_network_csv(df: pd.DataFrame) -> Path:
     """Exporta CSV para Flourish: conexiones de pase entre jugadores.
 
     Crea aristas basadas en: misma posición + similitud de métricas de pase.
-    El peso refuerza la conexión (mayor peso = más similitud).
+    El **peso** es una similitud normalizada (0-1), **no** el número de
+    pases observados. La red resultante es sintética y construida para
+    ilustrar agrupaciones por posición, no para reflejar la frecuencia
+    real de pases en la temporada 2024-25.
 
     Returns:
         Ruta del CSV generado.
@@ -173,13 +176,17 @@ def export_network_csv(df: pd.DataFrame) -> Path:
 
 
 def _betweenness_proxy(df: pd.DataFrame) -> pd.Series:
-    """Calcula una proxy de betweenness centrality.
+    """Calcula una proxy ilustrada de betweenness centrality.
 
     Usa: (KP + 1/3 + PPA) / (Att + 1) como medida de intermediación
-    en la red de pase.
+    aproximada. **Esta no es centralidad de betweenness de NetworkX** y
+    debe compararse únicamente con otras proxies construidas con el
+    mismo método; no es comparable a resultados a nivel de evento
+    StatsBomb u otras redes de pases observadas.
 
     Returns:
-        Serie con centralidad normalizada (0-1).
+        Serie con centralidad normalizada (0-1) solo para propósitos
+        ilustrativos dentro de este proyecto.
     """
     kp = pd.to_numeric(df.get("KP", 0), errors="coerce").fillna(0)
     tercios = pd.to_numeric(df.get("1/3", 0), errors="coerce").fillna(0)
@@ -195,6 +202,11 @@ def _betweenness_proxy(df: pd.DataFrame) -> pd.Series:
 
 def export_centrality_csv(df: pd.DataFrame) -> Path:
     """Exporta CSV para Observable Plot: centralidad vs precisión de pase.
+
+    La columna **betweenness** usa el proxy ilustrado `_betweenness_proxy`,
+    no la centralidad de betweenness de NetworkX. Solo debe usarse para
+    visualizaciones internas a este proyecto y no compararse con
+    métricas de red observadas en otros datasets.
 
     Returns:
         Ruta del CSV generado.
