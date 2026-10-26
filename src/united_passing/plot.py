@@ -69,7 +69,7 @@ def plot_top_passers(
 
     ax.set_xlabel(metric, fontsize=11)
     ax.set_ylabel("")
-    ax.set_title(f"Top {top_n} jugadores — {metric} | Man Utd 2024/25", fontweight="bold")
+    ax.set_title(f"Top {top_n} jugadores, {metric} | Man Utd 2024/25", fontweight="bold")
     fig.text(
         0.01,
         0.01,
@@ -140,7 +140,7 @@ def plot_prog_ratio_scatter(
 
     ax.set_xlabel("Pases Completados (Cmp)", fontsize=11)
     ax.set_ylabel("Ratio de Pases Progresivos (Prog/Cmp)", fontsize=11)
-    ax.set_title("Volumen vs Eficiencia Progresiva — Mediocampistas Man Utd", fontweight="bold")
+    ax.set_title("Volumen vs Eficiencia Progresiva, Mediocampistas Man Utd", fontweight="bold")
     ax.legend(fontsize=8)
     ax.grid(True, alpha=0.2)
     fig.text(

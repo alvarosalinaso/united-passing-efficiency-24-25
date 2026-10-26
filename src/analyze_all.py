@@ -1,5 +1,5 @@
 """
-Orchestrador principal — United Passing Efficiency 2024-25.
+Orchestrador principal, United Passing Efficiency 2024-25.
 Ejecuta todo el pipeline de analisis.
 """
 
@@ -14,7 +14,7 @@ from statistical_tests import run_statistical_tests
 
 def main():
     print("=" * 60)
-    print("ANALISIS DE EFICIENCIA DE PASES — MAN UNITED 2024-25")
+    print("ANALISIS DE EFICIENCIA DE PASES, MAN UNITED 2024-25")
     print("=" * 60)
 
     print("\n[1/7] Clustering de jugadores...")

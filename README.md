@@ -59,7 +59,7 @@ for _, row in passes.iterrows():
 ## Visualizations
 
 <details>
-<summary><strong>Datawrapper — PL Benchmark</strong></summary>
+<summary><strong>Datawrapper, PL Benchmark</strong></summary>
 
 <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;max-width:100%;">
   <iframe src="https://datawrapper.dwcdn.net/BlxD1/" title="PL Benchmark" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;" loading="lazy" allowfullscreen></iframe>
@@ -67,7 +67,7 @@ for _, row in passes.iterrows():
 </details>
 
 <details>
-<summary><strong>Observable — Interactive graph</strong></summary>
+<summary><strong>Observable, Interactive graph</strong></summary>
 
 <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;max-width:100%;">
   <iframe src="https://observablehq.com/@alvarosalinaso/passing-network" title="Passing Network" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;" loading="lazy" allowfullscreen></iframe>
@@ -110,9 +110,9 @@ united-passing-efficiency-24-25/
 
 ## Related projects
 
-- [Manchester United Analysis](https://github.com/alvarosalinaso/manchester-united-analisis) — Causal analysis of managerial changes
-- [Tactical Graph Theory](https://github.com/alvarosalinaso/tactical-narrative-graph-analysis) — NetworkX graph visualization
-- [Portfolio Web](https://github.com/alvarosalinaso/portfolio-web) — Dashboard with all projects
+- [Manchester United Analysis](https://github.com/alvarosalinaso/manchester-united-analisis), Causal analysis of managerial changes
+- [Tactical Graph Theory](https://github.com/alvarosalinaso/tactical-narrative-graph-analysis), NetworkX graph visualization
+- [Portfolio Web](https://github.com/alvarosalinaso/portfolio-web), Dashboard with all projects
 
 ---
 

@@ -23,7 +23,7 @@ def generate():
 
         tbl = (
             GT(top)
-            .tab_header(title="Top 5 Métricas de Red — Man United Pases 2024-25")
+            .tab_header(title="Top 5 Métricas de Red, Man United Pases 2024-25")
             .tab_source_note("Fuente: StatsBomb Open Data | Análisis: Álvaro Salinas")
         )
         Path("assets").mkdir(exist_ok=True)
@@ -32,7 +32,7 @@ def generate():
     except ImportError:
         # Fallback: pandas styling
         styled = (
-            top.style.set_caption("Top 5 Métricas de Red — Man United Pases 2024-25")
+            top.style.set_caption("Top 5 Métricas de Red, Man United Pases 2024-25")
             .set_table_styles(
                 [
                     {
